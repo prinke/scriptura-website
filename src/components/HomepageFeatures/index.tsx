@@ -52,12 +52,11 @@ export default function HomepageFeatures(): ReactNode {
 				<div className={styles.infoRow}>
 					<div className={styles.infoCard}>
 						<Heading as="h3" className={styles.featureTitle}>
-							Built by a Christian
+							Users first
 						</Heading>
 						<p className={styles.featureDescription}>
-							I am a faithful Christian seeking to glorify God with my creations.{' '}
-							<Link to="/docs/developer">Learn more me</Link>.
-						</p>
+							Customizable formatting, preferred translations, and flexible settings
+							that fit how your community shares Scripture.
 					</div>
 					<div className={styles.infoCard}>
 						<Heading as="h3" className={styles.featureTitle}>
