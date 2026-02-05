@@ -57,6 +57,7 @@ export default function HomepageFeatures(): ReactNode {
 						<p className={styles.featureDescription}>
 							Customizable formatting, preferred translations, and flexible settings
 							that fit how your community shares Scripture.
+						</p>
 					</div>
 					<div className={styles.infoCard}>
 						<Heading as="h3" className={styles.featureTitle}>
