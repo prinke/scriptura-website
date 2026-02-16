@@ -26,7 +26,7 @@ function HomepageHeader() {
           <div className={styles.heroButtons}>
             <Link
               className="button button--primary button--lg"
-              to="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot%20applications.commands&permissions=274877975552">
+              to="https://discord.com/oauth2/authorize?client_id=1291760421115527251">
               Add to Discord
             </Link>
             <Link className="button button--secondary button--lg" to="/docs/intro">
