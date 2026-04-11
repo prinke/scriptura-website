@@ -7,21 +7,15 @@ tags: [welcome,update,features]
 
 # Scriptura: A New Name, New Home, and What’s Coming Next
 
-I’m excited to share some meaningful updates to the Discord Bible bot many of you have been using and supporting. What started as a small personal project has grown into something I’m genuinely thankful for—and with that growth comes a few important changes.
+I'm excited to share meaningful updates to Scriptura, the Discord Bible bot many of you have been using and supporting. What started as a small personal project has grown into something I'm genuinely thankful for—and with that growth comes some important improvements and features.
 
 <!-- truncate -->
 
 ---
 
-## From BibleBot to Scriptura
+## About Scriptura
 
-The first big change is the name.
-
-**BibleBot is now Scriptura.**
-
-The new name better reflects the heart of the project: making Scripture accessible, shareable, and central to our conversations. “Scriptura” emphasizes the Word itself rather than the tool, which aligns much more closely with why I built this bot in the first place.
-
-You may still see references to BibleBot in older commits or discussions, but going forward, **Scriptura** is the official name.
+Scriptura is designed with a clear mission: making Scripture accessible, shareable, and central to our conversations. The name emphasizes the Word itself rather than the tool, reflecting the heart of this project. It's built to make studying and sharing the Bible simple and intuitive for everyone.
 
 ---
 
