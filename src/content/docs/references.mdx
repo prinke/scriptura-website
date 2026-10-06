@@ -1,0 +1,44 @@
+---
+title: Writing references
+description: How to type Bible references and phrase searches, plus every accepted book abbreviation.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import BookTable from '../../components/BookTable.astro';
+
+The `query` in `/verse search` can be a Bible reference or a phrase. If Scriptura recognizes it as a reference, you get that passage. If not, it searches for it as a phrase.
+
+## References
+
+| Format | Example |
+| --- | --- |
+| Whole chapter | `Psalm 23` |
+| Single verse | `John 3:16` |
+| Verse range | `Romans 8:1-11` |
+| Abbreviated book | `1 Cor 13:4-7`, `Gen 1:1`, `Ps 46:1` |
+
+- Capitalization and periods don't matter: `jn 3:16` and `Gen. 1:1` both work.
+- Use a normal hyphen (`-`) for ranges.
+- All 66 books of the Protestant Bible are supported.
+- ESV is the most flexible about how references are written.
+
+<Aside type="caution" title="Ranges across chapters">
+A range like `John 3:16-4:2` only works in **ESV**. In other translations, request each chapter separately.
+</Aside>
+
+## Phrase searches
+
+```
+/verse search query:love is patient
+/verse search query:armor of God translation:NASB
+```
+
+- Use distinctive words: `armor of God` finds more useful results than `God`.
+- Results come from the selected translation, so the wording differs between translations.
+- If a phrase finds nothing, try another translation or fewer words.
+
+## Book names and abbreviations
+
+These work in every translation.
+
+<BookTable />

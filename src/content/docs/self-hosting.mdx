@@ -1,0 +1,100 @@
+---
+title: Self-hosting & development
+description: Run your own instance of Scriptura, or contribute to the project.
+---
+
+import { Aside, FileTree } from '@astrojs/starlight/components';
+
+<Aside type="note" title="Optional">
+You don't need anything on this page to use Scriptura. Just [add the public bot](/getting-started/). This page is for people who want to run their own copy or contribute code.
+</Aside>
+
+## Run your own instance
+
+### Requirements
+
+- Node.js 18 or newer (the current LTS is recommended)
+- A Discord application and bot token from the [Discord Developer Portal](https://discord.com/developers/applications)
+- An [ESV API](https://api.esv.org/) key (required)
+- A [Bible Brain API](https://www.faithcomesbyhearing.com/bible-brain/developer-documentation) key, needed for every translation except ESV
+- A MongoDB database. Include the database name in the connection string.
+
+### Environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `TOKEN` | Yes | Discord bot token |
+| `CLIENT_ID` | Yes | Discord application ID, used to register commands |
+| `ESV_API_KEY` | Yes | ESV API key |
+| `BIBLE_BRAIN_KEY` | Yes, for non-ESV translations | Bible Brain API key |
+| `MONGO_URI` | Yes | MongoDB connection string |
+| `GUILD_ID` | No | Clears leftover server-only commands in this server after registering global commands |
+
+```ini title=".env"
+TOKEN=your_bot_token
+CLIENT_ID=your_client_id
+ESV_API_KEY=your_esv_api_key
+BIBLE_BRAIN_KEY=your_bible_brain_key
+MONGO_URI=mongodb+srv://user:pass@host/scriptura
+```
+
+### Setup
+
+```bash
+git clone https://github.com/prinketaru/scriptura.git
+cd scriptura
+npm install
+cp .env.example .env    # fill in your values
+npm run deploy          # register slash commands with Discord
+npm start               # or: npm run dev for auto-reload
+```
+
+| Script | What it does |
+| --- | --- |
+| `npm start` | Run the bot |
+| `npm run dev` | Run with auto-reload |
+| `npm run deploy` | Register slash commands with Discord |
+| `npm run lint` / `npm run lint:fix` | Check / fix code style |
+
+### Hosting
+
+Scriptura runs as a background worker and doesn't need a web port. The included `Procfile` (`worker: node deploy-commands.js && npm start`) works on Heroku-style hosts and Dokku.
+
+The repo also includes a GitHub Actions workflow that deploys to Dokku on every push to `master`. It needs the secrets `DOKKU_HOST`, `DOKKU_APP` and `SSH_PRIVATE_KEY`.
+
+## Contributing
+
+1. Fork the repo and create a feature branch.
+2. Make your changes and run `npm run lint`.
+3. Test in Discord, including multiple translations and pagination.
+4. Open a pull request with a clear description.
+
+Code style: tabs, single quotes, semicolons, JSDoc comments, ESLint. Contributions are licensed under GPL-3.0.
+
+### Project layout
+
+<FileTree>
+- index.js Bot entry point (loads commands, handles interactions, daily status)
+- deploy-commands.js Registers slash commands with Discord
+- daily_verses.json Daily verse list
+- commands/
+  - verses/ `/verse`
+  - utility/ `/preferences`, `/ping`
+- helpers/ Scripture API clients, translations, preferences storage, embeds
+</FileTree>
+
+### Adding a command
+
+Create `commands/<category>/<name>.js` that exports `data` (a `SlashCommandBuilder`) and `execute(interaction)`, then run `npm run deploy`. Commands load automatically.
+
+### Adding a translation
+
+In `helpers/translations.js`, add the Bible Brain text fileset IDs to `BIBLE_BRAIN_BIBLES` and add a matching entry to `translationChoices`, then run `npm run deploy`. For reference, the existing fileset IDs are:
+
+| Code | Fileset IDs |
+| --- | --- |
+| NKJV | OT `ENGNKJO_ET`, NT `ENGNKJN_ET` |
+| KJV | OT `ENGKJVO_ET`, NT `ENGKJVN_ET` |
+| NASB | OT `ENGNASO_ET`, NT `ENGNASN_ET` |
+| NLT | OT `ENGNLTO_ET`, NT `ENGNLTN_ET` |
+| ASV | complete `ENGASV` |

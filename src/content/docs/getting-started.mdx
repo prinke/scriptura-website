@@ -1,0 +1,59 @@
+---
+title: Getting started
+description: Add Scriptura to Discord and look up your first verse.
+---
+
+import { Steps, LinkButton, Aside } from '@astrojs/starlight/components';
+import DiscordMessage from '../../components/DiscordMessage.astro';
+
+Scriptura brings the Bible into Discord. Look up a passage, search for a phrase, or read the daily verse, all with slash commands. It takes about a minute to set up.
+
+## Add Scriptura
+
+<LinkButton href="https://discord.com/oauth2/authorize?client_id=1291760421115527251" target="_blank" rel="noopener" icon="external">Add to Discord</LinkButton>
+
+When you open the invite link, Discord asks how you want to add it:
+
+- **Add to Server.** Scriptura joins a server and everyone there can use its commands. You need the **Manage Server** permission in that server.
+- **Add to My Apps.** The commands follow *you* around Discord, so you can use them in DMs, group DMs and servers where Scriptura isn't installed.
+
+You can do both. Every command works in servers, in DMs with the bot, and in private and group DMs.
+
+<Aside type="note">
+Some servers restrict user apps, so commands from **Add to My Apps** may not work everywhere.
+</Aside>
+
+## Your first command
+
+<Steps>
+
+1. In any channel or DM, type `/verse search` and pick it from the list.
+
+2. Type `John 3:16` in the `query` field and press <kbd>Enter</kbd>.
+
+3. Scriptura replies with the passage in the ESV:
+
+   <DiscordMessage command="/verse search" embedTitle="John 3:16 (ESV)" embedHref="https://www.biblegateway.com/passage/?search=John+3%3A16&version=ESV">
+     <sup class="text-dc-muted">16</sup> “For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.
+   </DiscordMessage>
+
+</Steps>
+
+## Where to go next
+
+Try a few more:
+
+```
+/verse search query:love is patient
+/verse search query:Psalm 23 translation:KJV
+/preferences set translation:NKJV
+```
+
+- Search by phrase, or type references in different ways: [Writing references](/references/)
+- Pick a translation, or save a favorite: [Translations](/translations/)
+- Choose how verses look: [Preferences](/preferences/)
+- See everything Scriptura can do: [Commands](/commands/)
+
+<Aside type="tip" title="Your messages stay private">
+Scriptura only responds to slash commands. It can't read the messages in your channels.
+</Aside>

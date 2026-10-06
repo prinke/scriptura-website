@@ -1,0 +1,71 @@
+---
+title: Preferences
+description: Save your favorite translation and choose how verses are displayed.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Use `/preferences` to save how Scriptura shows verses to you. Your settings follow you to every server and DM, and preference replies are only visible to you.
+
+```
+/preferences set translation:KJV
+/preferences set verse_numbers:False line_by_line:On
+/preferences view
+/preferences reset
+```
+
+## `/preferences set`
+
+Every option is optional, but you need to choose at least one.
+
+| Option | Values | What it does |
+| --- | --- | --- |
+| `translation` | ESV, NKJV, KJV, NASB, NLT, ASV | Your default translation |
+| `footnotes` | True / False | Show footnotes and study notes |
+| `headings` | Auto / On / Off | Show section headings |
+| `verse_numbers` | True / False | Show verse numbers |
+| `line_by_line` | Auto / On / Off | Put each verse on its own line, useful for poetry and Psalms |
+
+After saving, Scriptura shows your full settings:
+
+```
+Your preferences have been updated:
+Translation: KJV
+Footnotes: Off
+Headings: Auto
+Verse numbers: On
+Line by line: Auto
+```
+
+## `/preferences view`
+
+Shows your current translation and display settings.
+
+## `/preferences reset`
+
+Resets your **display** settings (footnotes, headings, verse numbers and line by line) to the defaults.
+
+<Aside type="note">
+Your saved translation is kept. To change it, use `/preferences set translation:`.
+</Aside>
+
+## Defaults
+
+| Setting | Default |
+| --- | --- |
+| Translation | ESV |
+| Footnotes | Off |
+| Headings | Auto |
+| Verse numbers | On |
+| Line by line | Auto |
+
+## Which settings apply to which translations
+
+Some settings only apply to certain translations. Each translation comes from a different scripture source, and not every source supports every setting.
+
+| Setting | ESV | NKJV, KJV, NASB, NLT, ASV |
+| --- | --- | --- |
+| Footnotes | ✅ | — |
+| Headings | ✅ (Auto = off) | — |
+| Verse numbers | Always shown | ✅ |
+| Line by line | Uses ESV's own formatting | ✅ (Auto = on for Psalms only) |

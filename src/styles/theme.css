@@ -1,0 +1,39 @@
+/* Design tokens shared by the landing page (global.css) and the docs (starlight.css). */
+
+/* Follow the same theme switch Starlight uses (data-theme on <html>). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+	--font-serif: "Newsreader", ui-serif, Georgia, serif;
+	--font-mono: "Geist Mono", ui-monospace, monospace;
+
+	--color-forest-50: #f2f6f2;
+	--color-forest-100: #e1eae1;
+	--color-forest-200: #c2d5c3;
+	--color-forest-300: #95b598;
+	--color-forest-400: #5f8b63;
+	--color-forest-500: #3f6b43;
+	--color-forest-600: #2f5233;
+	--color-forest-700: #27432a;
+	--color-forest-800: #203622;
+	--color-forest-900: #182a1a;
+
+	--color-paper: #faf9f5;
+	--color-ink: #1a1d1a;
+
+	/* Discord mock palette */
+	--color-dc-bg: #313338;
+	--color-dc-embed: #2b2d31;
+	--color-dc-text: #dbdee1;
+	--color-dc-muted: #949ba4;
+	--color-dc-link: #00a8fc;
+	--color-dc-blurple: #5865f2;
+}
+
+/* Single-color logo, tinted with currentColor. */
+.logo-mark {
+	display: inline-block;
+	background-color: currentColor;
+	mask: url("/android-chrome-512x512.png") center / contain no-repeat;
+}

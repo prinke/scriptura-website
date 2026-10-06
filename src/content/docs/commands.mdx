@@ -1,0 +1,114 @@
+---
+title: Commands
+description: Every Scriptura slash command, with options and examples.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import DiscordMessage from '../../components/DiscordMessage.astro';
+
+Scriptura has three commands: `/verse`, `/preferences` and `/ping`.
+
+| Command | What it does | Who sees the reply |
+| --- | --- | --- |
+| [`/verse search query:<text> [translation]`](#verse-search) | Get a passage or search for a phrase | Everyone in the channel |
+| [`/verse daily`](#verse-daily) | Today's daily verse | Everyone in the channel |
+| [`/preferences set [options…]`](/preferences/#preferences-set) | Save your translation and display settings | Only you |
+| [`/preferences view`](/preferences/#preferences-view) | See your current settings | Only you |
+| [`/preferences reset`](/preferences/#preferences-reset) | Reset display settings to defaults | Only you |
+| [`/ping`](#ping) | Check the bot's response time | Only you |
+
+Error messages are always visible only to you.
+
+## `/verse search`
+
+Get a Bible passage by reference, or search the Bible for a word or phrase.
+
+```
+/verse search query:John 3:16
+/verse search query:Psalm 23 translation:KJV
+/verse search query:Romans 8:1-11 translation:NLT
+/verse search query:1 Cor 13:4-7
+/verse search query:love is patient
+/verse search query:armor of God translation:NASB
+```
+
+| Option | Required | Description |
+| --- | --- | --- |
+| `query` | Yes | A Bible reference (e.g. `John 3:16`) or a phrase (e.g. `in love`) |
+| `translation` | No | ESV, NKJV, KJV, NASB, NLT or ASV |
+
+If your query looks like a reference, you get that passage. If it doesn't, Scriptura searches for it as a phrase. See [Writing references](/references/) for the formats it understands.
+
+### Which translation is used
+
+1. The `translation` you picked in the command, if any.
+2. Otherwise, your saved translation from [`/preferences set translation:`](/preferences/).
+3. Otherwise, **ESV**.
+
+### Passage results
+
+<DiscordMessage command="/verse search" embedTitle="Psalm 46:1 (ESV)" embedHref="https://www.biblegateway.com/passage/?search=Psalm+46%3A1&version=ESV">
+  <sup class="text-dc-muted">1</sup> God is our refuge and strength, a very present help in trouble.
+</DiscordMessage>
+
+- The title shows the reference and translation. Click it to open the passage on BibleGateway in the same translation.
+- Very long passages, such as some full chapters, are cut off at Discord's 4,096-character limit. Ask for a smaller range if that happens.
+
+### Search results
+
+<DiscordMessage command="/verse search" embedTitle='Search results: "love is patient"'>
+  <p class="text-dc-muted">Translation: ESV</p>
+  <p class="mt-2 font-semibold text-white">1 Corinthians 13:4</p>
+  <p>Love is patient and kind; love does not envy or boast; it is not arrogant</p>
+</DiscordMessage>
+
+- Each page shows up to **10 matching verses** with their references.
+- When there are more, **Previous** and **Next** buttons appear, and the footer reads like `Page 1/5 · Showing 1-10 of 47 results`.
+- Only the person who ran the search can use the buttons. They stop working after **2 minutes**. Run the search again to keep browsing.
+
+### Errors
+
+If something goes wrong, Scriptura replies with a message only you can see. Your query and translation are shown underneath in small text.
+
+<DiscordMessage command="/verse search" ephemeral>
+  <p>No results found.</p>
+  <p class="text-xs text-dc-muted">Query: Hezekiah 3:1 • Translation: ESV</p>
+</DiscordMessage>
+
+| Message | What it means |
+| --- | --- |
+| `No results found.` | The reference doesn't exist in that translation, or the phrase had no matches. |
+| `There was an error while executing this command!` | The scripture service didn't respond. Try again shortly. |
+| `Verse found, but could not parse passage content.` | Try a different translation. |
+
+## `/verse daily`
+
+```
+/verse daily
+```
+
+Shows today's daily verse. It has no options. The verse is shown in your saved translation (ESV if you haven't set one) with your display settings, and it looks just like a normal passage. Learn more on the [Daily verse](/daily-verse/) page.
+
+## `/preferences`
+
+Save your favorite translation and how verses are displayed. These settings follow you to every server and DM, and the replies are only visible to you.
+
+```
+/preferences set translation:NKJV verse_numbers:True
+/preferences view
+/preferences reset
+```
+
+See [Preferences](/preferences/) for every option.
+
+## `/ping`
+
+```
+/ping
+```
+
+Replies with `Pong!` and the bot's current latency in milliseconds. Use it to check that Scriptura is online and responding.
+
+<Aside type="tip">
+Commands don't show up? See [the FAQ](/faq/#the-commands-dont-show-up).
+</Aside>

@@ -1,0 +1,25 @@
+---
+title: Daily verse
+description: How Scriptura's shared daily verse works.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Every day, Scriptura picks one verse for everyone. Use `/verse daily` to read it:
+
+```
+/verse daily
+```
+
+## How it works
+
+- Everyone gets the same **reference** on the same day, but the **text** is shown in your own saved translation, with your [display settings](/preferences/).
+- The verse comes from a hand-picked list of 31 well-known passages that the bot cycles through, such as Genesis 1:1, Psalm 23:1, John 3:16, Romans 8:28, Proverbs 3:5, Isaiah 41:10, Philippians 4:13 and Jeremiah 29:11.
+
+<Aside type="note" title="Changes at midnight UTC">
+The daily verse changes at midnight UTC, not at your local midnight. Depending on where you live, that could be in the evening or the morning.
+</Aside>
+
+## See it at a glance
+
+Scriptura's Discord status always shows today's verse as **Listening to &lt;reference&gt;**, for example *Listening to Philippians 4:13*. Look at the bot in the member list or open its profile to see the daily verse without running a command.

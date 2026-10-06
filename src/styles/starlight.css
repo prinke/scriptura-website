@@ -1,0 +1,73 @@
+/* Docs styling: Starlight theme variables, plus Tailwind utilities (no preflight) for shared components. */
+@layer base, starlight, theme, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./theme.css";
+
+/* Dark (Starlight's default) */
+:root {
+	--sl-font: "Geist", ui-sans-serif, system-ui, sans-serif;
+	--sl-font-mono: "Geist Mono", ui-monospace, monospace;
+
+	--sl-color-accent-low: #1c2f1e;
+	--sl-color-accent: #3f6b43;
+	--sl-color-accent-high: #c2d5c3;
+
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #eceeea;
+	--sl-color-gray-2: #c4c8c2;
+	--sl-color-gray-3: #8e948c;
+	--sl-color-gray-4: #5a6058;
+	--sl-color-gray-5: #353a34;
+	--sl-color-gray-6: #1c201c;
+	--sl-color-black: #121412;
+
+	/* Asides: notes are neutral, tips use the brand green. */
+	--sl-color-blue-low: #232723;
+	--sl-color-blue: #8e948c;
+	--sl-color-blue-high: #eceeea;
+	--sl-color-purple-low: #1c2f1e;
+	--sl-color-purple: #5f8b63;
+	--sl-color-purple-high: #c2d5c3;
+}
+
+:root[data-theme="light"] {
+	--sl-color-accent-low: #e1eae1;
+	--sl-color-accent: #2f5233;
+	--sl-color-accent-high: #203622;
+
+	--sl-color-white: #1a1d1a;
+	--sl-color-gray-1: #262a26;
+	--sl-color-gray-2: #3a3f39;
+	--sl-color-gray-3: #5c625a;
+	--sl-color-gray-4: #8a9088;
+	--sl-color-gray-5: #c5c9c2;
+	--sl-color-gray-6: #ecebe5;
+	--sl-color-gray-7: #f4f3ee;
+	--sl-color-black: #faf9f5;
+
+	--sl-color-blue-low: #efeee8;
+	--sl-color-blue: #8a9088;
+	--sl-color-blue-high: #262a26;
+	--sl-color-purple-low: #e1eae1;
+	--sl-color-purple: #2f5233;
+	--sl-color-purple-high: #203622;
+}
+
+/* Serif headings, matching the landing page. */
+.sl-markdown-content :is(h1, h2, h3),
+h1#_top {
+	font-family: "Newsreader", ui-serif, Georgia, serif;
+	font-weight: 500;
+	letter-spacing: -0.01em;
+}
+
+/* Keep wide tables (book abbreviations, settings) readable. */
+.sl-markdown-content table code {
+	white-space: nowrap;
+}
+
+.site-title img {
+	height: 1.75rem;
+	width: auto;
+}

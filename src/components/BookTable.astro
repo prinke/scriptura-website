@@ -1,0 +1,107 @@
+---
+/** Searchable table of accepted book names and abbreviations. */
+import { books } from '../data/books';
+---
+
+<div class="book-table">
+	<label class="filter">
+		<span class="sr-only">Filter books</span>
+		<input type="search" placeholder="Filter books, e.g. “cor” or “ps”" autocomplete="off" />
+	</label>
+	<table>
+		<thead>
+			<tr>
+				<th>Book</th>
+				<th>You can type</th>
+			</tr>
+		</thead>
+		{
+			(['OT', 'NT'] as const).map((t) => (
+				<tbody data-testament={t}>
+					<tr class="group">
+						<th colspan="2">{t === 'OT' ? 'Old Testament' : 'New Testament'}</th>
+					</tr>
+					{books
+						.filter((b) => b.testament === t)
+						.map((b) => (
+							<tr data-search={[b.name, ...b.aliases].join(' ').toLowerCase()}>
+								<td>{b.name}</td>
+								<td>
+									{b.aliases.map((a, i) => (
+										<>
+											<code>{a}</code>
+											{i < b.aliases.length - 1 && ' '}
+										</>
+									))}
+								</td>
+							</tr>
+						))}
+				</tbody>
+			))
+		}
+	</table>
+	<p class="empty" hidden>No books match that filter.</p>
+</div>
+
+<script>
+	for (const root of document.querySelectorAll<HTMLElement>('.book-table')) {
+		const input = root.querySelector('input')!;
+		const empty = root.querySelector<HTMLElement>('.empty')!;
+		input.addEventListener('input', () => {
+			const q = input.value.trim().toLowerCase().replace(/\./g, '');
+			let total = 0;
+			for (const body of root.querySelectorAll('tbody')) {
+				let shown = 0;
+				for (const row of body.querySelectorAll<HTMLElement>('tr[data-search]')) {
+					const match = !q || row.dataset.search!.includes(q);
+					row.hidden = !match;
+					if (match) shown++;
+				}
+				(body.querySelector('tr.group') as HTMLElement).hidden = shown === 0;
+				total += shown;
+			}
+			empty.hidden = total > 0;
+		});
+	}
+</script>
+
+<style>
+	.filter input {
+		width: 100%;
+		padding: 0.6rem 0.85rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		background: var(--sl-color-black);
+		color: var(--sl-color-white);
+		font: inherit;
+		font-size: var(--sl-text-sm);
+	}
+	.filter input:focus {
+		outline: 2px solid var(--sl-color-accent);
+		outline-offset: -1px;
+	}
+	table {
+		display: table;
+		width: 100%;
+	}
+	tr.group th {
+		padding-top: 1rem;
+		background: transparent;
+		font-size: var(--sl-text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--sl-color-gray-3);
+	}
+	td:first-child {
+		white-space: nowrap;
+		font-weight: 500;
+		color: var(--sl-color-white);
+	}
+	td code {
+		margin-inline-end: 0.15rem;
+	}
+	.empty {
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+	}
+</style>

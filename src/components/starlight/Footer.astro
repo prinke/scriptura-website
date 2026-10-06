@@ -1,0 +1,50 @@
+---
+// Starlight's footer, plus links, license and scripture attribution.
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { GITHUB_URL, INVITE_URL } from '../../consts';
+---
+
+<Default><slot /></Default>
+<div class="site-footer">
+	<p class="links">
+		<a href={GITHUB_URL} target="_blank" rel="noopener">GitHub</a>
+		<a href={INVITE_URL} target="_blank" rel="noopener">Add to Discord</a>
+		<a href="/privacy">Privacy</a>
+		<a href="/terms">Terms</a>
+		<a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GPL-3.0 license</a>
+	</p>
+	<p>
+		Scripture quotations marked ESV are from the ESV® Bible (The Holy Bible, English Standard Version®), © Crossway, via
+		the <a href="https://api.esv.org" target="_blank" rel="noopener">ESV API</a>. All other translations are provided through{' '}
+		<a href="https://www.faithcomesbyhearing.com/bible-brain" target="_blank" rel="noopener">Bible Brain by Faith Comes By Hearing</a>.
+	</p>
+</div>
+
+<style>
+	.site-footer {
+		margin-top: 3rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--sl-color-hairline);
+		font-size: var(--sl-text-xs);
+		line-height: 1.6;
+		color: var(--sl-color-gray-3);
+	}
+	.site-footer p + p {
+		margin-top: 0.75rem;
+	}
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.25rem;
+		font-size: var(--sl-text-sm);
+	}
+	.site-footer a {
+		color: inherit;
+	}
+	.site-footer a:hover {
+		color: var(--sl-color-white);
+	}
+	.links a {
+		text-decoration: none;
+	}
+</style>

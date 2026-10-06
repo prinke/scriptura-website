@@ -1,0 +1,27 @@
+---
+// Starlight's "Edit page" link, opening GitHub in a new tab.
+import { Icon } from '@astrojs/starlight/components';
+
+const { editUrl } = Astro.locals.starlightRoute;
+---
+
+{
+	editUrl && (
+		<a href={editUrl} target="_blank" rel="noopener" class="sl-flex print:hidden">
+			<Icon name="pencil" size="1.2em" />
+			{Astro.locals.t('page.editLink')}
+		</a>
+	)
+}
+
+<style>
+	a {
+		gap: 0.5rem;
+		align-items: center;
+		text-decoration: none;
+		color: var(--sl-color-gray-3);
+	}
+	a:hover {
+		color: var(--sl-color-white);
+	}
+</style>

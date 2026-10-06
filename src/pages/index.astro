@@ -1,0 +1,320 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DiscordMessage from '../components/DiscordMessage.astro';
+import { GITHUB_URL as GITHUB, INVITE_URL as INVITE } from '../consts';
+
+const nav = [
+	{ label: 'Getting started', href: '/getting-started' },
+	{ label: 'Commands', href: '/commands' },
+	{ label: 'Translations', href: '/translations' },
+	{ label: 'FAQ', href: '/faq' },
+];
+
+// Icon paths are 24×24, stroked (Lucide style).
+const features = [
+	{
+		title: 'Look up or search',
+		body: 'Type a reference like Romans 8:1-11, or just a phrase you half remember. Scriptura figures out which one you meant.',
+		icon: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+		href: '/references',
+	},
+	{
+		title: 'Six translations',
+		body: 'ESV, NKJV, KJV, NASB, NLT and ASV. Pick one per command, or save a favorite so you never have to.',
+		icon: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
+		href: '/translations',
+	},
+	{
+		title: 'Read it your way',
+		body: 'Turn verse numbers, headings, footnotes and line-by-line poetry on or off. Your settings follow you everywhere.',
+		icon: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+		href: '/preferences',
+	},
+	{
+		title: 'A verse for each day',
+		body: 'Everyone sees the same daily verse, in their own translation. The bot’s status shows it at a glance.',
+		icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+		href: '/daily-verse',
+	},
+	{
+		title: 'Servers and DMs',
+		body: 'Add it to a server for everyone, or to your own account to use it in DMs and servers where it isn’t installed.',
+		icon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+		href: '/getting-started',
+	},
+	{
+		title: 'Private and open source',
+		body: 'It can’t read your messages and only stores the preferences you save. Every line of code is on GitHub.',
+		icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+		href: '/privacy',
+	},
+];
+
+const examples = [
+	{ cmd: '/verse search', args: 'query:John 3:16', note: 'A single verse' },
+	{ cmd: '/verse search', args: 'query:Psalm 23 translation:KJV', note: 'A whole chapter, in KJV' },
+	{ cmd: '/verse search', args: 'query:love is patient', note: 'Search by phrase' },
+	{ cmd: '/verse daily', args: '', note: 'Today’s verse' },
+	{ cmd: '/preferences set', args: 'translation:NKJV', note: 'Save your favorite' },
+];
+
+const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
+---
+
+<Layout>
+	<!-- Header -->
+	<header class="sticky top-0 z-30 border-b border-black/5 bg-paper/80 backdrop-blur-md dark:border-white/5 dark:bg-[#121412]/80">
+		<div class="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6">
+			<a href="/" class="flex shrink-0 items-center gap-2.5 font-semibold tracking-tight">
+				<span class="grid size-8 place-items-center rounded-lg bg-forest-600">
+					<span class="logo-mark size-[18px] text-white" aria-hidden="true"></span>
+				</span>
+				Scriptura
+			</a>
+			<nav class="hidden items-center gap-1 text-sm text-stone-600 md:flex dark:text-stone-400">
+				{
+					nav.map((item) => (
+						<a href={item.href} class="rounded-md px-3 py-1.5 transition-colors hover:bg-black/5 hover:text-ink dark:hover:bg-white/5 dark:hover:text-white">
+							{item.label}
+						</a>
+					))
+				}
+			</nav>
+			<div class="ml-auto flex items-center gap-1.5">
+				<a href={GITHUB} target="_blank" rel="noopener" aria-label="Scriptura on GitHub" class="grid size-9 place-items-center rounded-md text-stone-500 transition-colors hover:bg-black/5 hover:text-ink dark:hover:bg-white/5 dark:hover:text-white">
+					<svg viewBox="0 0 24 24" class="size-[18px]" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+				</a>
+				<button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="grid size-9 place-items-center rounded-md text-stone-500 transition-colors hover:bg-black/5 hover:text-ink dark:hover:bg-white/5 dark:hover:text-white">
+					<svg viewBox="0 0 24 24" class="size-[18px] dark:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+					<svg viewBox="0 0 24 24" class="hidden size-[18px] dark:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+				</button>
+				<a href={INVITE} target="_blank" rel="noopener" class="ml-1.5 rounded-lg bg-forest-600 px-3 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm transition-colors hover:bg-forest-700 sm:px-3.5">
+					Add to Discord
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<!-- Hero -->
+		<section class="relative overflow-hidden">
+			<div aria-hidden="true" class="pointer-events-none absolute inset-x-0 -top-40 h-[480px] bg-[radial-gradient(ellipse_at_top,var(--color-forest-100),transparent_65%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(47,82,51,0.35),transparent_65%)]"></div>
+			<div class="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pt-16 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-24 lg:pb-28">
+				<div>
+					<h1 class="font-serif text-5xl leading-[1.05] font-normal tracking-tight text-balance sm:text-6xl">
+						Scripture, right where your <em class="text-forest-600 dark:text-forest-300">community</em> gathers.
+					</h1>
+					<p class="mt-6 max-w-xl text-lg leading-relaxed text-stone-600 dark:text-stone-400">
+						Scriptura is a Discord bot for looking up and searching the Bible. Share a passage with your study group, or read on your own, without leaving the conversation.
+					</p>
+					<div class="mt-9 flex flex-wrap items-center gap-3">
+						<a href={INVITE} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg bg-forest-600 px-5 py-3 font-medium text-white shadow-sm shadow-forest-900/20 transition-colors hover:bg-forest-700">
+							<svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+							Add to Discord
+						</a>
+						<a href="/getting-started" class="group inline-flex items-center gap-1.5 rounded-lg px-4 py-3 font-medium text-stone-700 transition-colors hover:bg-black/5 dark:text-stone-300 dark:hover:bg-white/5">
+							Get started
+							<span class="transition-transform group-hover:translate-x-0.5">→</span>
+						</a>
+					</div>
+				</div>
+
+				<div class="relative">
+					<div aria-hidden="true" class="absolute -inset-6 -z-10 hidden rounded-[2rem] sm:block bg-forest-600/5 dark:bg-forest-400/5"></div>
+					<DiscordMessage
+						command="/verse search"
+						embedTitle="John 3:16 (ESV)"
+						embedHref="https://www.biblegateway.com/passage/?search=John+3%3A16&version=ESV"
+					>
+						<p>
+							<sup class="mr-0.5 text-dc-muted">16</sup>“For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.
+						</p>
+					</DiscordMessage>
+					<div class="mt-4 flex items-center gap-2 rounded-xl bg-white px-4 py-3 font-mono text-sm shadow-sm ring-1 ring-black/5 dark:bg-white/5 dark:ring-white/10">
+						<span class="text-forest-600 dark:text-forest-300">/verse search</span>
+						<span class="rounded bg-stone-100 px-1.5 py-0.5 text-stone-600 dark:bg-white/10 dark:text-stone-300">query: John 3:16</span>
+						<span class="ml-px h-4 w-px animate-pulse bg-stone-400"></span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Features -->
+		<section class="border-t border-black/5 dark:border-white/5">
+			<div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
+				<div class="max-w-2xl">
+					<h2 class="font-serif text-3xl tracking-tight sm:text-4xl">Simple to use, made to stay out of the way.</h2>
+					<p class="mt-4 text-stone-600 dark:text-stone-400">Three slash commands cover everything. No setup, no accounts, no ads.</p>
+				</div>
+				<div class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-black/5 ring-1 ring-black/5 sm:grid-cols-2 lg:grid-cols-3 dark:bg-white/5 dark:ring-white/5">
+					{
+						features.map((f) => (
+							<a href={f.href} class="group bg-paper p-7 transition-colors hover:bg-white dark:bg-[#121412] dark:hover:bg-white/[0.03]">
+								<span class="grid size-10 place-items-center rounded-lg bg-forest-50 text-forest-600 ring-1 ring-forest-100 dark:bg-forest-900/50 dark:text-forest-300 dark:ring-forest-800">
+									<svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={f.icon} />
+								</span>
+								<h3 class="mt-5 font-medium">{f.title}</h3>
+								<p class="mt-2 text-sm leading-relaxed text-stone-600 dark:text-stone-400">{f.body}</p>
+							</a>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<!-- Try it -->
+		<section class="bg-forest-50/60 dark:bg-white/[0.02]">
+			<div class="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:py-24">
+				<div>
+					<h2 class="font-serif text-3xl tracking-tight sm:text-4xl">Up and running in a minute.</h2>
+					<ol class="mt-8 space-y-6">
+						<li class="flex gap-4">
+							<span class="grid size-7 shrink-0 place-items-center rounded-full bg-forest-600 text-sm font-medium text-white">1</span>
+							<div>
+								<p class="font-medium">Add Scriptura</p>
+								<p class="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-400">
+									Choose <strong class="font-medium text-ink dark:text-stone-200">Add to Server</strong> so everyone can use it, or <strong class="font-medium text-ink dark:text-stone-200">Add to My Apps</strong> to take it with you across Discord.
+								</p>
+							</div>
+						</li>
+						<li class="flex gap-4">
+							<span class="grid size-7 shrink-0 place-items-center rounded-full bg-forest-600 text-sm font-medium text-white">2</span>
+							<div>
+								<p class="font-medium">Type a command</p>
+								<p class="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-400">Start typing <code class="font-mono text-forest-700 dark:text-forest-300">/verse</code> in any channel or DM and Discord will guide you through the options.</p>
+							</div>
+						</li>
+						<li class="flex gap-4">
+							<span class="grid size-7 shrink-0 place-items-center rounded-full bg-forest-600 text-sm font-medium text-white">3</span>
+							<div>
+								<p class="font-medium">Make it yours</p>
+								<p class="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-400">Save a favorite translation and display style with <code class="font-mono text-forest-700 dark:text-forest-300">/preferences set</code>.</p>
+							</div>
+						</li>
+					</ol>
+					<a href="/commands" class="group mt-10 inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 hover:text-forest-900 dark:text-forest-300 dark:hover:text-forest-200">
+						See all commands <span class="transition-transform group-hover:translate-x-0.5">→</span>
+					</a>
+				</div>
+
+				<div class="self-center overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 dark:bg-[#181b18] dark:ring-white/10">
+					<div class="flex items-center gap-1.5 border-b border-black/5 px-4 py-3 dark:border-white/5">
+						<span class="size-2.5 rounded-full bg-stone-200 dark:bg-white/10"></span>
+						<span class="size-2.5 rounded-full bg-stone-200 dark:bg-white/10"></span>
+						<span class="size-2.5 rounded-full bg-stone-200 dark:bg-white/10"></span>
+						<span class="ml-2 text-xs text-stone-500">Try these</span>
+					</div>
+					<ul class="divide-y divide-black/5 dark:divide-white/5">
+						{
+							examples.map((e) => (
+								<li class="flex flex-col gap-1 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+									<code class="font-mono text-[13px]">
+										<span class="text-forest-600 dark:text-forest-300">{e.cmd}</span>
+										{e.args && <span class="text-stone-600 dark:text-stone-300"> {e.args}</span>}
+									</code>
+									<span class="shrink-0 text-xs text-stone-400">{e.note}</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<!-- Translations + daily verse -->
+		<section>
+			<div class="mx-auto grid max-w-6xl gap-6 px-4 py-20 sm:px-6 md:grid-cols-2 lg:py-24">
+				<div class="rounded-2xl p-8 ring-1 ring-black/5 dark:ring-white/10">
+					<h2 class="font-serif text-2xl tracking-tight">Your translation, every time</h2>
+					<p class="mt-3 text-sm leading-relaxed text-stone-600 dark:text-stone-400">ESV is the default. Choose another for a single lookup, or save it as your own default.</p>
+					<div class="mt-6 flex flex-wrap gap-2">
+						{
+							translations.map((t, i) => (
+								<span class:list={['rounded-md px-2.5 py-1 font-mono text-xs font-medium', i === 0 ? 'bg-forest-600 text-white' : 'bg-stone-100 text-stone-700 dark:bg-white/5 dark:text-stone-300']}>
+									{t}
+								</span>
+							))
+						}
+					</div>
+					<a href="/translations" class="group mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 dark:text-forest-300">
+						About the translations <span class="transition-transform group-hover:translate-x-0.5">→</span>
+					</a>
+				</div>
+				<div class="rounded-2xl p-8 ring-1 ring-black/5 dark:ring-white/10">
+					<h2 class="font-serif text-2xl tracking-tight">One verse, shared by everyone</h2>
+					<p class="mt-3 text-sm leading-relaxed text-stone-600 dark:text-stone-400">The daily verse changes at midnight UTC. Run <code class="font-mono text-forest-700 dark:text-forest-300">/verse daily</code>, or glance at the bot’s status.</p>
+					<div class="mt-6 flex items-center gap-3 rounded-xl bg-dc-embed p-3 pr-5 text-dc-text">
+						<div class="relative">
+							<div class="grid size-10 place-items-center rounded-full bg-forest-600">
+								<span class="logo-mark size-5 text-white" aria-hidden="true"></span>
+							</div>
+							<span class="absolute -right-0.5 -bottom-0.5 size-3.5 rounded-full border-[3px] border-dc-embed bg-[#23a55a]"></span>
+						</div>
+						<div class="text-sm leading-tight">
+							<p class="font-medium text-white">Scriptura</p>
+							<p class="mt-1 text-xs text-dc-muted">Listening to <span class="font-semibold text-dc-text">Philippians 4:13</span></p>
+						</div>
+					</div>
+					<a href="/daily-verse" class="group mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 dark:text-forest-300">
+						How the daily verse works <span class="transition-transform group-hover:translate-x-0.5">→</span>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<!-- CTA -->
+		<section class="px-4 pb-20 sm:px-6 lg:pb-24">
+			<div class="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-forest-700 px-6 py-16 text-center text-white sm:px-12">
+				<span aria-hidden="true" class="logo-mark pointer-events-none absolute -right-10 -bottom-16 size-72 text-white/[0.04]"></span>
+				<h2 class="relative font-serif text-3xl tracking-tight text-balance sm:text-4xl">Bring Scripture into your server.</h2>
+				<p class="relative mx-auto mt-4 max-w-md text-forest-100/80">Free forever, with no ads and nothing to sign up for.</p>
+				<div class="relative mt-8 flex flex-wrap justify-center gap-3">
+					<a href={INVITE} target="_blank" rel="noopener" class="rounded-lg bg-white px-5 py-3 font-medium text-forest-800 shadow-sm transition-colors hover:bg-forest-50">Add to Discord</a>
+					<a href="/getting-started" class="rounded-lg px-5 py-3 font-medium text-white ring-1 ring-white/25 transition-colors hover:bg-white/10">Read the docs</a>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Footer -->
+	<footer class="border-t border-black/5 dark:border-white/5">
+		<div class="mx-auto max-w-6xl px-4 py-12 text-sm sm:px-6">
+			<div class="flex flex-col gap-8 md:flex-row md:justify-between">
+				<div class="max-w-xs">
+					<a href="/" class="flex items-center gap-2 font-semibold">
+						<span class="logo-mark size-5 text-forest-600 dark:text-forest-300" aria-hidden="true"></span>
+						Scriptura
+					</a>
+					<p class="mt-3 text-stone-500">A Discord bot for reading and searching the Bible.</p>
+				</div>
+				<div class="grid grid-cols-2 gap-x-16 gap-y-2 text-stone-600 sm:grid-cols-3 dark:text-stone-400">
+					<a href="/getting-started" class="hover:text-ink dark:hover:text-white">Getting started</a>
+					<a href="/commands" class="hover:text-ink dark:hover:text-white">Commands</a>
+					<a href="/faq" class="hover:text-ink dark:hover:text-white">FAQ</a>
+					<a href="/privacy" class="hover:text-ink dark:hover:text-white">Privacy</a>
+					<a href="/terms" class="hover:text-ink dark:hover:text-white">Terms</a>
+					<a href={GITHUB} target="_blank" rel="noopener" class="hover:text-ink dark:hover:text-white">GitHub</a>
+					<a href={INVITE} target="_blank" rel="noopener" class="hover:text-ink dark:hover:text-white">Add to Discord</a>
+				</div>
+			</div>
+			<div class="mt-10 space-y-2 border-t border-black/5 pt-6 text-xs leading-relaxed text-stone-500 dark:border-white/5">
+				<p>
+					Scripture quotations marked ESV are from the ESV® Bible (The Holy Bible, English Standard Version®), © Crossway, via the <a href="https://api.esv.org" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">ESV API</a>. All other translations are provided through <a href="https://www.faithcomesbyhearing.com/bible-brain" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">Bible Brain by Faith Comes By Hearing</a>.
+				</p>
+				<p>
+					Open source under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">GPL-3.0 license</a>. Made by <a href="https://github.com/prinketaru" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">prinke</a>.
+				</p>
+			</div>
+		</div>
+	</footer>
+</Layout>
+
+<script>
+	document.getElementById('theme-toggle')?.addEventListener('click', () => {
+		const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+		document.documentElement.dataset.theme = next;
+		try {
+			localStorage.setItem('starlight-theme', next);
+		} catch {}
+	});
+</script>

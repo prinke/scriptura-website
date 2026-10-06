@@ -1,0 +1,72 @@
+---
+/**
+ * A Discord-style bot reply with an embed, used to preview what Scriptura's
+ * responses look like. Put the embed body in the default slot, or leave out
+ * `embedTitle` to render the slot as a plain message.
+ */
+interface Props {
+	command: string;
+	user?: string;
+	embedTitle?: string;
+	embedHref?: string;
+	footer?: string;
+	/** Show Discord's "Only you can see this" note. */
+	ephemeral?: boolean;
+	class?: string;
+}
+
+const { command, user = 'you', embedTitle, embedHref, footer, ephemeral = false, class: className } = Astro.props;
+---
+
+<div class:list={['not-content rounded-xl bg-dc-bg p-4 font-sans text-[15px] text-dc-text shadow-xl ring-1 ring-black/10 sm:p-5', className]}>
+	<div class="mb-1.5 flex items-center gap-1.5 pl-[52px] text-[13px] text-dc-muted">
+		<span class="text-dc-muted/80">↱</span>
+		<span class="font-medium text-dc-text/90">{user}</span>
+		<span>used</span>
+		<span class="font-medium text-dc-link">{command}</span>
+	</div>
+	<div class="flex gap-3">
+		<div class="grid size-10 shrink-0 place-items-center rounded-full bg-forest-600">
+			<span class="logo-mark size-5 text-white" aria-hidden="true"></span>
+		</div>
+		<div class="min-w-0 flex-1">
+			<div class="flex items-center gap-1.5">
+				<span class="font-medium text-white">Scriptura</span>
+				<span class="rounded bg-dc-blurple px-1 py-px text-[10px] font-semibold uppercase leading-tight text-white">App</span>
+				<span class="text-xs text-dc-muted">Today at 9:41 AM</span>
+			</div>
+			{
+				embedTitle ? (
+					<div class="mt-1.5 max-w-[520px] rounded border-l-4 border-forest-600 bg-dc-embed px-4 py-3">
+						{
+							embedHref ? (
+								<a href={embedHref} target="_blank" rel="noopener" class="font-semibold text-dc-link no-underline hover:underline">
+									{embedTitle}
+								</a>
+							) : (
+								<span class="font-semibold text-white">{embedTitle}</span>
+							)
+						}
+						<div class="mt-2 text-sm leading-relaxed">
+							<slot />
+						</div>
+						{footer && <div class="mt-3 text-xs text-dc-muted">{footer}</div>}
+					</div>
+				) : (
+					<div class="mt-0.5 leading-relaxed">
+						<slot />
+					</div>
+				)
+			}
+			<slot name="after" />
+			{
+				ephemeral && (
+					<p class="mt-1.5 flex items-center gap-1 text-xs text-dc-muted">
+						<svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>
+						Only you can see this • <span class="text-dc-link">Dismiss message</span>
+					</p>
+				)
+			}
+		</div>
+	</div>
+</div>

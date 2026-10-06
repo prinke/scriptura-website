@@ -1,0 +1,44 @@
+---
+// Starlight's social links (opening in a new tab), plus a prominent "Add to Discord" button.
+import config from 'virtual:starlight/user-config';
+import { Icon } from '@astrojs/starlight/components';
+import { INVITE_URL } from '../../consts';
+
+const links = config.social || [];
+---
+
+{
+	links.map(({ label, href, icon }) => (
+		<a {href} target="_blank" rel="me noopener" class="social sl-flex">
+			<span class="sr-only">{label}</span>
+			<Icon name={icon} />
+		</a>
+	))
+}
+<a href={INVITE_URL} target="_blank" rel="noopener" class="invite">Add to Discord</a>
+
+<style>
+	.social {
+		color: var(--sl-color-text-accent);
+		padding: 0.5em;
+		margin: -0.5em;
+	}
+	.social:hover {
+		color: var(--sl-color-white);
+	}
+	.invite {
+		padding: 0.4rem 0.85rem;
+		border-radius: 0.5rem;
+		background: #2f5233;
+		color: #fff;
+		font-size: var(--sl-text-sm);
+		font-weight: 500;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: background-color 0.15s;
+	}
+	.invite:hover {
+		background: #27432a;
+		color: #fff;
+	}
+</style>
