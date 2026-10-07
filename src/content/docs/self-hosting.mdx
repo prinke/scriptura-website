@@ -13,11 +13,17 @@ You don't need anything on this page to use Scriptura. Just [add the public bot]
 
 ### Requirements
 
-- Node.js 18 or newer (the current LTS is recommended)
+- **Node.js 22.12 or newer.** This is required by the voice library (`@discordjs/voice` 0.19).
+- **FFmpeg**, for `/audio`. The `ffmpeg-static` npm package normally provides it during `npm install`. If your host blocks install scripts, install FFmpeg on the system instead.
 - A Discord application and bot token from the [Discord Developer Portal](https://discord.com/developers/applications)
 - An [ESV API](https://api.esv.org/) key (required)
 - A [Bible Brain API](https://www.faithcomesbyhearing.com/bible-brain/developer-documentation) key, needed for every translation except ESV
 - A MongoDB database. Include the database name in the connection string.
+
+### Discord settings
+
+- The bot uses the **Guild Voice States** gateway intent. It isn't privileged, so there's nothing to turn on in the Developer Portal.
+- For `/audio`, the bot needs **Connect** and **Speak**. For `/daily-channel`, it needs **View Channel**, **Send Messages** and **Embed Links**. Consider adding these to your invite link's permissions.
 
 ### Environment variables
 
@@ -25,7 +31,7 @@ You don't need anything on this page to use Scriptura. Just [add the public bot]
 | --- | --- | --- |
 | `TOKEN` | Yes | Discord bot token |
 | `CLIENT_ID` | Yes | Discord application ID, used to register commands |
-| `ESV_API_KEY` | Yes | ESV API key |
+| `ESV_API_KEY` | Yes | ESV API key, used for both text and audio |
 | `BIBLE_BRAIN_KEY` | Yes, for non-ESV translations | Bible Brain API key |
 | `MONGO_URI` | Yes | MongoDB connection string |
 | `GUILD_ID` | No | Clears leftover server-only commands in this server after registering global commands |
@@ -56,6 +62,19 @@ npm start               # or: npm run dev for auto-reload
 | `npm run deploy` | Register slash commands with Discord |
 | `npm run lint` / `npm run lint:fix` | Check / fix code style |
 
+### Database
+
+Scriptura uses two MongoDB collections:
+
+| Collection | Stores |
+| --- | --- |
+| `user_preferences` | Each user's saved translation and display settings |
+| `guild_settings` | `/daily-channel` schedules, one document per server |
+
+### Updating
+
+After pulling a new version, run `npm install` (dependencies may have changed) and `npm run deploy` (to register new or changed commands).
+
 ### Hosting
 
 Scriptura runs as a background worker and doesn't need a web port. The included `Procfile` (`worker: node deploy-commands.js && npm start`) works on Heroku-style hosts and Dokku.
@@ -66,7 +85,7 @@ The repo also includes a GitHub Actions workflow that deploys to Dokku on every 
 
 1. Fork the repo and create a feature branch.
 2. Make your changes and run `npm run lint`.
-3. Test in Discord, including multiple translations and pagination.
+3. Test in Discord, including multiple translations and pagination (and voice, if you touched `/audio`).
 4. Open a pull request with a clear description.
 
 Code style: tabs, single quotes, semicolons, JSDoc comments, ESLint. Contributions are licensed under GPL-3.0.
@@ -74,18 +93,33 @@ Code style: tabs, single quotes, semicolons, JSDoc comments, ESLint. Contributio
 ### Project layout
 
 <FileTree>
-- index.js Bot entry point (loads commands, handles interactions, daily status)
+- index.js Bot entry point (loads commands, handles interactions, daily status, starts the daily-post scheduler)
 - deploy-commands.js Registers slash commands with Discord
 - daily_verses.json Daily verse list
 - commands/
   - verses/ `/verse`
-  - utility/ `/preferences`, `/ping`
-- helpers/ Scripture API clients, translations, preferences storage, embeds
+  - audio/ `/audio`
+  - utility/ `/preferences`, `/daily-channel`, `/ping`
+- helpers/ Scripture API clients, translations, storage, embeds, voice sessions, scheduler, time zones
 </FileTree>
+
+Some helpers worth knowing about:
+
+| File | Purpose |
+| --- | --- |
+| `helpers/ui.js` | Shared embed colors, error embeds, text truncation, BibleGateway links |
+| `helpers/voice_session.js` | One voice connection per server; plays audio and cleans up when playback ends or the channel empties |
+| `helpers/guild_settings.js` | Stores `/daily-channel` schedules in MongoDB |
+| `helpers/daily_verse_scheduler.js` | Checks every minute for servers whose daily verse is due and posts it |
+| `helpers/timezones.js` | Time zone validation, time parsing, next-post calculation, autocomplete |
 
 ### Adding a command
 
 Create `commands/<category>/<name>.js` that exports `data` (a `SlashCommandBuilder`) and `execute(interaction)`, then run `npm run deploy`. Commands load automatically.
+
+A command can also export an optional `autocomplete(interaction)` handler. `index.js` routes autocomplete requests to it.
+
+For replies, use the shared colors and error embeds in `helpers/ui.js` so they match the rest of the bot. `/preferences` uses Discord's newer component layout (Components V2: containers, sections and buttons) if you need an example of that.
 
 ### Adding a translation
 

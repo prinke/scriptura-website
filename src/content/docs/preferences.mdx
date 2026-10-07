@@ -4,50 +4,31 @@ description: Save your favorite translation and choose how verses are displayed.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import PreferencesPanel from '../../components/PreferencesPanel.astro';
 
-Use `/preferences` to save how Scriptura shows verses to you. Your settings follow you to every server and DM, and preference replies are only visible to you.
-
-```
-/preferences set translation:KJV
-/preferences set verse_numbers:False line_by_line:On
-/preferences view
-/preferences reset
-```
-
-## `/preferences set`
-
-Every option is optional, but you need to choose at least one.
-
-| Option | Values | What it does |
-| --- | --- | --- |
-| `translation` | ESV, NKJV, KJV, NASB, NLT, ASV | Your default translation |
-| `footnotes` | True / False | Show footnotes and study notes |
-| `headings` | Auto / On / Off | Show section headings |
-| `verse_numbers` | True / False | Show verse numbers |
-| `line_by_line` | Auto / On / Off | Put each verse on its own line, useful for poetry and Psalms |
-
-After saving, Scriptura shows your full settings:
+Use `/preferences` to save how Scriptura shows verses to you. Your settings follow you to every server and DM.
 
 ```
-Your preferences have been updated:
-Translation: KJV
-Footnotes: Off
-Headings: Auto
-Verse numbers: On
-Line by line: Auto
+/preferences
 ```
 
-## `/preferences view`
+The command has no options. It opens a **settings panel that only you can see**:
 
-Shows your current translation and display settings.
+<PreferencesPanel />
 
-## `/preferences reset`
+## How the controls work
 
-Resets your **display** settings (footnotes, headings, verse numbers and line by line) to the defaults.
+- **Translation dropdown:** pick your default translation.
+- **Footnotes** and **Verse numbers:** tap to switch between **On** (green) and **Off** (grey).
+- **Section headings** and **Line by line:** tap to cycle **Auto** (blue) → **On** (green) → **Off** (grey).
+- **Reset display settings** (red): resets footnotes, verse numbers, headings and line by line to their defaults.
+- Every change **saves immediately**. A confirmation line like *"✓ Footnotes set to on."* appears at the bottom.
 
 <Aside type="note">
-Your saved translation is kept. To change it, use `/preferences set translation:`.
+**Reset display settings** keeps your saved translation. To change it, pick another one from the dropdown.
 </Aside>
+
+The panel stops responding after **5 minutes without a click**. It then says *"This menu has expired. Run /preferences again to make more changes."*
 
 ## Defaults
 
@@ -67,5 +48,9 @@ Some settings only apply to certain translations. Each translation comes from a 
 | --- | --- | --- |
 | Footnotes | ✅ | — |
 | Headings | ✅ (Auto = off) | — |
-| Verse numbers | Always shown | ✅ |
+| Verse numbers | ✅ | ✅ |
 | Line by line | Uses ESV's own formatting | ✅ (Auto = on for Psalms only) |
+
+## Errors
+
+If you see **Couldn’t load your preferences** or **Couldn’t save that change**, it's a temporary problem. Try again. Both messages are shown only to you.

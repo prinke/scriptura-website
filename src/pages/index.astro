@@ -1,11 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordMessage from '../components/DiscordMessage.astro';
+import DiscordButton from '../components/DiscordButton.astro';
+import PreferencesPanel from '../components/PreferencesPanel.astro';
 import { GITHUB_URL as GITHUB, INVITE_URL as INVITE } from '../consts';
 
 const nav = [
 	{ label: 'Getting started', href: '/getting-started' },
 	{ label: 'Commands', href: '/commands' },
+	{ label: 'Audio', href: '/audio' },
 	{ label: 'Translations', href: '/translations' },
 	{ label: 'FAQ', href: '/faq' },
 ];
@@ -19,6 +22,20 @@ const features = [
 		href: '/references',
 	},
 	{
+		title: 'Listen together',
+		body: 'Play the ESV audio Bible in a voice channel. Anyone listening can pause or stop it, and Scriptura leaves when it’s done.',
+		icon: '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+		href: '/audio',
+		isNew: true,
+	},
+	{
+		title: 'Daily verse, delivered',
+		body: 'Pick a channel and a time, and Scriptura posts the verse of the day there every morning, in your server’s time zone.',
+		icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+		href: '/daily-channel',
+		isNew: true,
+	},
+	{
 		title: 'Six translations',
 		body: 'ESV, NKJV, KJV, NASB, NLT and ASV. Pick one per command, or save a favorite so you never have to.',
 		icon: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
@@ -26,21 +43,9 @@ const features = [
 	},
 	{
 		title: 'Read it your way',
-		body: 'Turn verse numbers, headings, footnotes and line-by-line poetry on or off. Your settings follow you everywhere.',
+		body: 'One settings panel with buttons for verse numbers, headings, footnotes and line-by-line poetry. Your settings follow you everywhere.',
 		icon: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
 		href: '/preferences',
-	},
-	{
-		title: 'A verse for each day',
-		body: 'Everyone sees the same daily verse, in their own translation. The bot’s status shows it at a glance.',
-		icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
-		href: '/daily-verse',
-	},
-	{
-		title: 'Servers and DMs',
-		body: 'Add it to a server for everyone, or to your own account to use it in DMs and servers where it isn’t installed.',
-		icon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
-		href: '/getting-started',
 	},
 	{
 		title: 'Private and open source',
@@ -55,7 +60,9 @@ const examples = [
 	{ cmd: '/verse search', args: 'query:Psalm 23 translation:KJV', note: 'A whole chapter, in KJV' },
 	{ cmd: '/verse search', args: 'query:love is patient', note: 'Search by phrase' },
 	{ cmd: '/verse daily', args: '', note: 'Today’s verse' },
-	{ cmd: '/preferences set', args: 'translation:NKJV', note: 'Save your favorite' },
+	{ cmd: '/audio play', args: 'passage:Psalm 23', note: 'Listen in voice' },
+	{ cmd: '/daily-channel set', args: 'channel:#daily-verse time:8am', note: 'Post it every morning' },
+	{ cmd: '/preferences', args: '', note: 'Open your settings' },
 ];
 
 const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
@@ -105,7 +112,7 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 						Scripture, right where your <em class="text-forest-600 dark:text-forest-300">community</em> gathers.
 					</h1>
 					<p class="mt-6 max-w-xl text-lg leading-relaxed text-stone-600 dark:text-stone-400">
-						Scriptura is a Discord bot for looking up and searching the Bible. Share a passage with your study group, or read on your own, without leaving the conversation.
+						Scriptura is a Discord bot for reading, searching and listening to the Bible. Share a passage with your study group, listen together in voice, or read on your own, without leaving the conversation.
 					</p>
 					<div class="mt-9 flex flex-wrap items-center gap-3">
 						<a href={INVITE} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg bg-forest-600 px-5 py-3 font-medium text-white shadow-sm shadow-forest-900/20 transition-colors hover:bg-forest-700">
@@ -123,8 +130,9 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 					<div aria-hidden="true" class="absolute -inset-6 -z-10 hidden rounded-[2rem] sm:block bg-forest-600/5 dark:bg-forest-400/5"></div>
 					<DiscordMessage
 						command="/verse search"
-						embedTitle="John 3:16 (ESV)"
+						embedTitle="John 3:16"
 						embedHref="https://www.biblegateway.com/passage/?search=John+3%3A16&version=ESV"
+						footer="English Standard Version (ESV)"
 					>
 						<p>
 							<sup class="mr-0.5 text-dc-muted">16</sup>“For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.
@@ -144,7 +152,7 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 			<div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
 				<div class="max-w-2xl">
 					<h2 class="font-serif text-3xl tracking-tight sm:text-4xl">Simple to use, made to stay out of the way.</h2>
-					<p class="mt-4 text-stone-600 dark:text-stone-400">Three slash commands cover everything. No setup, no accounts, no ads.</p>
+					<p class="mt-4 text-stone-600 dark:text-stone-400">A handful of slash commands cover everything. No accounts, no ads.</p>
 				</div>
 				<div class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-black/5 ring-1 ring-black/5 sm:grid-cols-2 lg:grid-cols-3 dark:bg-white/5 dark:ring-white/5">
 					{
@@ -153,11 +161,81 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 								<span class="grid size-10 place-items-center rounded-lg bg-forest-50 text-forest-600 ring-1 ring-forest-100 dark:bg-forest-900/50 dark:text-forest-300 dark:ring-forest-800">
 									<svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={f.icon} />
 								</span>
-								<h3 class="mt-5 font-medium">{f.title}</h3>
+								<h3 class="mt-5 flex items-center gap-2 font-medium">
+									{f.title}
+									{f.isNew && <span class="rounded-full bg-forest-600 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white uppercase">New</span>}
+								</h3>
 								<p class="mt-2 text-sm leading-relaxed text-stone-600 dark:text-stone-400">{f.body}</p>
 							</a>
 						))
 					}
+				</div>
+			</div>
+		</section>
+
+		<!-- New features -->
+		<section class="border-t border-black/5 dark:border-white/5">
+			<div class="mx-auto max-w-6xl space-y-24 px-4 py-20 sm:px-6 lg:py-24">
+				<div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+					<div>
+						<span class="text-xs font-semibold tracking-widest text-forest-600 uppercase dark:text-forest-300">New · Audio Bible</span>
+						<h2 class="mt-3 font-serif text-3xl tracking-tight sm:text-4xl">Listen together in voice.</h2>
+						<p class="mt-4 leading-relaxed text-stone-600 dark:text-stone-400">
+							Join a voice channel and run <code class="font-mono text-forest-700 dark:text-forest-300">/audio play</code>. Scriptura joins and reads the passage aloud from the ESV audio Bible. Anyone in the channel can pause or stop it, and it leaves on its own when the passage ends.
+						</p>
+						<a href="/audio" class="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 dark:text-forest-300">
+							About audio <span class="transition-transform group-hover:translate-x-0.5">→</span>
+						</a>
+					</div>
+					<DiscordMessage
+						command="/audio play"
+						label="🎧 Now playing"
+						embedTitle="Psalm 23"
+						embedHref="https://www.biblegateway.com/passage/?search=Psalm+23&version=ESV"
+						footer="English Standard Version (ESV) · Audio © Crossway"
+					>
+						<p>Playing in <span class="rounded bg-dc-blurple/30 px-1 font-medium text-white">🔊 Fellowship</span> · Requested by <span class="rounded bg-dc-blurple/30 px-1 font-medium text-white">@you</span></p>
+						<div slot="after" class="mt-2 flex gap-2">
+							<DiscordButton>⏸️ Pause</DiscordButton>
+							<DiscordButton style="danger">⏹️ Stop</DiscordButton>
+						</div>
+					</DiscordMessage>
+				</div>
+
+				<div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+					<div class="lg:order-2">
+						<span class="text-xs font-semibold tracking-widest text-forest-600 uppercase dark:text-forest-300">New · For server admins</span>
+						<h2 class="mt-3 font-serif text-3xl tracking-tight sm:text-4xl">A verse every morning.</h2>
+						<p class="mt-4 leading-relaxed text-stone-600 dark:text-stone-400">
+							Pick a channel, a time and your time zone with <code class="font-mono text-forest-700 dark:text-forest-300">/daily-channel set</code>. Scriptura posts the verse of the day there, on your server’s local date, all year round.
+						</p>
+						<a href="/daily-channel" class="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 dark:text-forest-300">
+							Set up daily posts <span class="transition-transform group-hover:translate-x-0.5">→</span>
+						</a>
+					</div>
+					<DiscordMessage
+						class="lg:order-1"
+						label="☀️ Verse of the Day · Tuesday, October 6"
+						embedTitle="Philippians 4:13"
+						embedHref="https://www.biblegateway.com/passage/?search=Philippians+4%3A13&version=ESV"
+						footer="English Standard Version (ESV)"
+					>
+						<p><sup class="mr-0.5 text-dc-muted">13</sup>I can do all things through him who strengthens me.</p>
+					</DiscordMessage>
+				</div>
+
+				<div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+					<div>
+						<span class="text-xs font-semibold tracking-widest text-forest-600 uppercase dark:text-forest-300">Redesigned · Preferences</span>
+						<h2 class="mt-3 font-serif text-3xl tracking-tight sm:text-4xl">Settings, one tap away.</h2>
+						<p class="mt-4 leading-relaxed text-stone-600 dark:text-stone-400">
+							Run <code class="font-mono text-forest-700 dark:text-forest-300">/preferences</code> to open a panel only you can see. Pick a translation, then tap to turn footnotes, verse numbers, headings and line-by-line on or off. Every change saves instantly.
+						</p>
+						<a href="/preferences" class="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 dark:text-forest-300">
+							About preferences <span class="transition-transform group-hover:translate-x-0.5">→</span>
+						</a>
+					</div>
+					<PreferencesPanel />
 				</div>
 			</div>
 		</section>
@@ -188,7 +266,7 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 							<span class="grid size-7 shrink-0 place-items-center rounded-full bg-forest-600 text-sm font-medium text-white">3</span>
 							<div>
 								<p class="font-medium">Make it yours</p>
-								<p class="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-400">Save a favorite translation and display style with <code class="font-mono text-forest-700 dark:text-forest-300">/preferences set</code>.</p>
+								<p class="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-400">Run <code class="font-mono text-forest-700 dark:text-forest-300">/preferences</code> to pick a favorite translation and display style from a simple settings panel.</p>
 							</div>
 						</li>
 					</ol>
@@ -242,7 +320,7 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 				</div>
 				<div class="rounded-2xl p-8 ring-1 ring-black/5 dark:ring-white/10">
 					<h2 class="font-serif text-2xl tracking-tight">One verse, shared by everyone</h2>
-					<p class="mt-3 text-sm leading-relaxed text-stone-600 dark:text-stone-400">The daily verse changes at midnight UTC. Run <code class="font-mono text-forest-700 dark:text-forest-300">/verse daily</code>, or glance at the bot’s status.</p>
+					<p class="mt-3 text-sm leading-relaxed text-stone-600 dark:text-stone-400">Everyone gets the same verse each day, in their own translation. Run <code class="font-mono text-forest-700 dark:text-forest-300">/verse daily</code>, glance at the bot’s status, or have it posted in your server.</p>
 					<div class="mt-6 flex items-center gap-3 rounded-xl bg-dc-embed p-3 pr-5 text-dc-text">
 						<div class="relative">
 							<div class="grid size-10 place-items-center rounded-full bg-forest-600">
@@ -290,6 +368,8 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 				<div class="grid grid-cols-2 gap-x-16 gap-y-2 text-stone-600 sm:grid-cols-3 dark:text-stone-400">
 					<a href="/getting-started" class="hover:text-ink dark:hover:text-white">Getting started</a>
 					<a href="/commands" class="hover:text-ink dark:hover:text-white">Commands</a>
+					<a href="/audio" class="hover:text-ink dark:hover:text-white">Audio Bible</a>
+					<a href="/daily-channel" class="hover:text-ink dark:hover:text-white">Daily posts</a>
 					<a href="/faq" class="hover:text-ink dark:hover:text-white">FAQ</a>
 					<a href="/privacy" class="hover:text-ink dark:hover:text-white">Privacy</a>
 					<a href="/terms" class="hover:text-ink dark:hover:text-white">Terms</a>
@@ -299,7 +379,7 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 			</div>
 			<div class="mt-10 space-y-2 border-t border-black/5 pt-6 text-xs leading-relaxed text-stone-500 dark:border-white/5">
 				<p>
-					Scripture quotations marked ESV are from the ESV® Bible (The Holy Bible, English Standard Version®), © Crossway, via the <a href="https://api.esv.org" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">ESV API</a>. All other translations are provided through <a href="https://www.faithcomesbyhearing.com/bible-brain" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">Bible Brain by Faith Comes By Hearing</a>.
+					Scripture quotations marked ESV are from the ESV® Bible (The Holy Bible, English Standard Version®), © Crossway. ESV® audio, © Crossway. Both via the <a href="https://api.esv.org" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">ESV API</a>. All other translations are provided through <a href="https://www.faithcomesbyhearing.com/bible-brain" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">Bible Brain by Faith Comes By Hearing</a>.
 				</p>
 				<p>
 					Open source under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">GPL-3.0 license</a>. Made by <a href="https://prinke.dev" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink dark:hover:text-white">prinke</a>.

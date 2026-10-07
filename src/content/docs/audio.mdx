@@ -1,0 +1,109 @@
+---
+title: Audio Bible
+description: Listen to the ESV audio Bible together in a voice channel with /audio.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import DiscordMessage from '../../components/DiscordMessage.astro';
+import DiscordButton from '../../components/DiscordButton.astro';
+
+Listen to the **ESV audio Bible** in a voice channel. Scriptura joins the voice channel you're in and reads the passage aloud, so everyone in the channel can listen together.
+
+<Aside type="note" title="Servers only">
+`/audio` only works in servers where Scriptura was added with **Add to Server**. It doesn't work in DMs or through **Add to My Apps**.
+</Aside>
+
+## `/audio play`
+
+```
+/audio play passage:Psalm 23
+/audio play passage:John 3
+/audio play passage:Romans 8:1-11
+/audio play passage:Jonah 2
+```
+
+| Option | Required | Description |
+| --- | --- | --- |
+| `passage` | Yes | A Bible reference, e.g. `John 3`, `Psalm 23`, `Romans 8:1-11` |
+
+<Steps>
+
+1. Join a voice channel in a server where Scriptura is added.
+
+2. Run `/audio play passage:John 3`.
+
+3. Scriptura joins your channel and starts playing.
+
+</Steps>
+
+### The "Now playing" message
+
+Everyone in the text channel sees a message showing what's playing:
+
+<DiscordMessage command="/audio play" label="🎧 Now playing" embedTitle="Psalm 23" embedHref="https://www.biblegateway.com/passage/?search=Psalm+23&version=ESV" footer="English Standard Version (ESV) · Audio © Crossway">
+  <p>Playing in <span class="rounded bg-dc-blurple/30 px-1 font-medium text-white">🔊 Fellowship</span> · Requested by <span class="rounded bg-dc-blurple/30 px-1 font-medium text-white">@you</span></p>
+  <div slot="after" class="mt-2 flex gap-2">
+    <DiscordButton>⏸️ Pause</DiscordButton>
+    <DiscordButton style="danger">⏹️ Stop</DiscordButton>
+  </div>
+</DiscordMessage>
+
+- It shows the passage (linked to BibleGateway), which voice channel it's playing in, and who requested it.
+- **⏸️ Pause** / **▶️ Resume** and **⏹️ Stop** buttons control playback. While paused, the label changes to **⏸ Paused**.
+- **Anyone in the same voice channel** can use the buttons. People outside the channel get a private "Join the voice channel to use these controls" message.
+
+When playback ends, the message updates to show why, and the buttons disappear:
+
+| Status | Meaning |
+| --- | --- |
+| ✓ Finished | The passage finished playing |
+| ⏹ Stopped | Someone pressed Stop or used `/audio stop` (it shows who) |
+| ⏭ Skipped | Someone started a different passage in the same channel |
+| 👋 Left the empty channel | Everyone else left the voice channel |
+| 🔌 Disconnected | Scriptura was disconnected from the voice channel |
+| ⚠️ Playback failed | Something went wrong while playing |
+
+### Good to know
+
+- Audio is **ESV only**, whatever your saved translation is.
+- Any reference works: a verse, a range or a whole chapter. A book name on its own (e.g. `Jonah`) plays its **first chapter**. Phrase searches don't work with audio.
+- Scriptura plays in **one voice channel per server** at a time. Running `/audio play` again in the same channel switches to the new passage. Running it from a different channel while audio is playing shows an error.
+- Scriptura leaves on its own when the passage ends or when everyone else leaves the channel.
+- Stage channels aren't supported. Use a regular voice channel.
+- Scriptura only plays audio. It joins **self-deafened** and never listens to or records anything said in voice.
+
+## `/audio stop`
+
+```
+/audio stop
+```
+
+Stops playback and makes Scriptura leave the voice channel. You have to be in the same voice channel. The reply is visible only to you, and the "Now playing" message updates to **⏹ Stopped**.
+
+## Permissions
+
+Scriptura needs **Connect** and **Speak** in the voice channel. If either is missing, it tells you with an **I can’t speak in that channel** message. Ask a server admin to allow them for Scriptura's role or for that channel.
+
+## Errors
+
+These are shown only to you.
+
+<DiscordMessage command="/audio play" embedTitle="Join a voice channel first" variant="error" ephemeral />
+
+| Headline | Why |
+| --- | --- |
+| **Join a voice channel first** | You ran `/audio play` while not in a voice channel |
+| **Stage channels aren’t supported** | You're in a stage channel |
+| **I can’t speak in that channel** | Scriptura is missing Connect or Speak in your voice channel |
+| **Already playing elsewhere** | Scriptura is already playing in another voice channel in this server |
+| **Passage not found** | The reference isn't valid (e.g. a typo or a phrase instead of a reference) |
+| **No audio for that passage** | ESV has no audio for that reference |
+| **Couldn’t start playback** | Scriptura couldn't join the channel or load the audio. Try again |
+| **Something went wrong** | The ESV service didn't respond |
+| **Nothing is playing** | You ran `/audio stop` with nothing playing |
+| **Join the voice channel to stop playback** | You ran `/audio stop` from outside the channel where audio is playing |
+| **Audio only works in servers** | You ran `/audio` outside a server |
+
+<Aside type="tip">
+Something not working? See [the audio questions in the FAQ](/faq/#audio).
+</Aside>

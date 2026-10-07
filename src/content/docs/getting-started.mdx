@@ -6,7 +6,7 @@ description: Add Scriptura to Discord and look up your first verse.
 import { Steps, LinkButton, Aside } from '@astrojs/starlight/components';
 import DiscordMessage from '../../components/DiscordMessage.astro';
 
-Scriptura brings the Bible into Discord. Look up a passage, search for a phrase, or read the daily verse, all with slash commands. It takes about a minute to set up.
+Scriptura brings the Bible into Discord. Look up a passage, search for a phrase, read the daily verse, or listen to the audio Bible together in a voice channel, all with slash commands. It takes about a minute to set up.
 
 ## Add Scriptura
 
@@ -17,7 +17,7 @@ When you open the invite link, Discord asks how you want to add it:
 - **Add to Server.** Scriptura joins a server and everyone there can use its commands. You need the **Manage Server** permission in that server.
 - **Add to My Apps.** The commands follow *you* around Discord, so you can use them in DMs, group DMs and servers where Scriptura isn't installed.
 
-You can do both. Every command works in servers, in DMs with the bot, and in private and group DMs.
+You can do both. `/verse`, `/preferences` and `/ping` work everywhere: servers, DMs with the bot, and private and group DMs. `/audio` and `/daily-channel` only work in servers where Scriptura has been added with **Add to Server**.
 
 <Aside type="note">
 Some servers restrict user apps, so commands from **Add to My Apps** may not work everywhere.
@@ -33,7 +33,7 @@ Some servers restrict user apps, so commands from **Add to My Apps** may not wor
 
 3. Scriptura replies with the passage in the ESV:
 
-   <DiscordMessage command="/verse search" embedTitle="John 3:16 (ESV)" embedHref="https://www.biblegateway.com/passage/?search=John+3%3A16&version=ESV">
+   <DiscordMessage command="/verse search" embedTitle="John 3:16" embedHref="https://www.biblegateway.com/passage/?search=John+3%3A16&version=ESV" footer="English Standard Version (ESV)">
      <sup class="text-dc-muted">16</sup> “For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.
    </DiscordMessage>
 
@@ -46,13 +46,20 @@ Try a few more:
 ```
 /verse search query:love is patient
 /verse search query:Psalm 23 translation:KJV
-/preferences set translation:NKJV
+/preferences
+/audio play passage:Psalm 23
 ```
 
 - Search by phrase, or type references in different ways: [Writing references](/references/)
-- Pick a translation, or save a favorite: [Translations](/translations/)
+- Pick a translation, or save a favorite: run `/preferences` and pick one from the dropdown. See [Translations](/translations/)
 - Choose how verses look: [Preferences](/preferences/)
+- Listen in a voice channel: join one, then run `/audio play passage:Psalm 23`. See [Audio Bible](/audio/)
+- Server admin? Run `/daily-channel set` to post the daily verse every morning. See [Daily verse posts](/daily-channel/)
 - See everything Scriptura can do: [Commands](/commands/)
+
+## Permissions
+
+For audio, Scriptura needs **Connect** and **Speak** in the voice channel. For automatic daily posts, it needs **View Channel**, **Send Messages** and **Embed Links** in the chosen channel. If something's missing, Scriptura tells you which permission to add.
 
 <Aside type="tip" title="Your messages stay private">
 Scriptura only responds to slash commands. It can't read the messages in your channels.

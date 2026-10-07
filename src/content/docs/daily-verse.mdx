@@ -4,6 +4,7 @@ description: How Scriptura's shared daily verse works.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import DiscordMessage from '../../components/DiscordMessage.astro';
 
 Every day, Scriptura picks one verse for everyone. Use `/verse daily` to read it:
 
@@ -11,14 +12,28 @@ Every day, Scriptura picks one verse for everyone. Use `/verse daily` to read it
 /verse daily
 ```
 
+<DiscordMessage command="/verse daily" label="☀️ Verse of the Day" embedTitle="Philippians 4:13" embedHref="https://www.biblegateway.com/passage/?search=Philippians+4%3A13&version=ESV" footer="English Standard Version (ESV)">
+  <sup class="text-dc-muted">13</sup> I can do all things through him who strengthens me.
+</DiscordMessage>
+
 ## How it works
 
 - Everyone gets the same **reference** on the same day, but the **text** is shown in your own saved translation, with your [display settings](/preferences/).
 - The verse comes from a hand-picked list of 31 well-known passages that the bot cycles through, such as Genesis 1:1, Psalm 23:1, John 3:16, Romans 8:28, Proverbs 3:5, Isaiah 41:10, Philippians 4:13 and Jeremiah 29:11.
 
 <Aside type="note" title="Changes at midnight UTC">
-The daily verse changes at midnight UTC, not at your local midnight. Depending on where you live, that could be in the evening or the morning.
+`/verse daily` and the bot's status change at midnight UTC, not at your local midnight. Depending on where you live, that could be in the evening or the morning. Automatic [`/daily-channel`](/daily-channel/) posts use the **server's own local date**, in the time zone the admin picked.
 </Aside>
+
+## Automatic posts in your server
+
+Server admins can use `/daily-channel set` to have the daily verse posted in a channel every day, at a chosen local time:
+
+```
+/daily-channel set channel:#daily-verse time:8am timezone:America/New_York
+```
+
+See [Daily verse posts](/daily-channel/) for how to set it up.
 
 ## See it at a glance
 

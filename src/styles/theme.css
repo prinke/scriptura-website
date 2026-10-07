@@ -29,6 +29,14 @@
 	--color-dc-muted: #949ba4;
 	--color-dc-link: #00a8fc;
 	--color-dc-blurple: #5865f2;
+	--color-dc-field: #1e1f22;
+	/* Scriptura's embed border colors */
+	--color-dc-error: #b33a3a;
+	--color-dc-inactive: #4f545c;
+	/* Discord button styles */
+	--color-dc-btn-secondary: #4e5058;
+	--color-dc-btn-success: #248046;
+	--color-dc-btn-danger: #da373c;
 }
 
 /* Single-color logo, tinted with currentColor. */

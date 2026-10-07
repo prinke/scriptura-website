@@ -1,0 +1,104 @@
+---
+title: Daily verse posts
+description: Have Scriptura post the daily verse in a server channel every day with /daily-channel.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import DiscordMessage from '../../components/DiscordMessage.astro';
+
+Have Scriptura **post the [daily verse](/daily-verse/) automatically** in a channel, every day at a time you choose.
+
+<Aside type="note" title="For server admins">
+By default, `/daily-channel` is available to members with the **Manage Server** permission. Server owners can change who has access under **Server Settings → Integrations → Scriptura**. It only works in servers where Scriptura was added with **Add to Server**, and all replies are visible only to the person who ran the command.
+</Aside>
+
+## `/daily-channel set`
+
+```
+/daily-channel set channel:#daily-verse time:8am timezone:America/New_York
+/daily-channel set channel:#announcements time:07:30 timezone:Europe/London translation:KJV
+/daily-channel set channel:#general time:6:00 PM timezone:Australia/Sydney
+```
+
+| Option | Required | Description |
+| --- | --- | --- |
+| `channel` | Yes | The text or announcement channel to post in |
+| `time` | Yes | Time of day to post, e.g. `08:00`, `8am`, `7:30 PM` |
+| `timezone` | No | Your time zone. Start typing a city (e.g. `New York`, `London`, `Tokyo`) and pick from the list. **Defaults to UTC** |
+| `translation` | No | ESV, NKJV, KJV, NASB, NLT or ASV. **Defaults to ESV** |
+
+**Accepted time formats:** `8`, `08:00`, `20:30` (24-hour), or `8am`, `8:30 PM`, `12pm` (12-hour).
+
+After saving, Scriptura confirms the schedule:
+
+<DiscordMessage command="/daily-channel set" embedTitle="✓ Daily verse scheduled" ephemeral>
+  <div class="grid gap-2">
+    <div><p class="font-semibold text-white">Channel</p><p><span class="rounded bg-dc-blurple/30 px-1 font-medium text-white">#daily-verse</span></p></div>
+    <div><p class="font-semibold text-white">Time</p><p>08:00 · America/New York (UTC−04:00)</p></div>
+    <div><p class="font-semibold text-white">Translation</p><p>English Standard Version (ESV)</p></div>
+    <div><p class="font-semibold text-white">Next post</p><p><span class="rounded bg-white/10 px-1">Wednesday, October 7, 2026 at 8:00 AM</span> (<span class="rounded bg-white/10 px-1">in 9 hours</span>)</p></div>
+  </div>
+</DiscordMessage>
+
+- **Next post** is shown in *each viewer's own local time*, with a countdown.
+- If you didn't choose a time zone, it adds a reminder: *"Times are in UTC. Add the timezone option to use your local time."*
+
+### Changing the schedule
+
+Run `/daily-channel set` again. If you leave out `timezone` or `translation`, Scriptura keeps what you chose last time. For example, `/daily-channel set channel:#verses time:6am` changes only the channel and time.
+
+## `/daily-channel view`
+
+```
+/daily-channel view
+```
+
+Shows the current schedule (channel, time, time zone, translation and next post) and when it last posted. If nothing is set up, it says **Daily verse is off**.
+
+## `/daily-channel disable`
+
+```
+/daily-channel disable
+```
+
+Turns off the daily posts and deletes the server's schedule. Use `/daily-channel set` to turn them back on.
+
+## What the daily post looks like
+
+A normal verse embed, with the date in the label above the reference:
+
+<DiscordMessage label="☀️ Verse of the Day · Tuesday, October 6" embedTitle="Philippians 4:13" embedHref="https://www.biblegateway.com/passage/?search=Philippians+4%3A13&version=ESV" footer="English Standard Version (ESV)">
+  <sup class="text-dc-muted">13</sup> I can do all things through him who strengthens me.
+</DiscordMessage>
+
+It's in the translation chosen for the server, with the default display settings (no footnotes, verse numbers on).
+
+## Good to know
+
+- The verse follows **your server's local date**. A server posting at 7am in Tokyo gets that day's verse, not the previous day's (UTC) verse. So near midnight UTC it can differ from `/verse daily`, which changes at midnight UTC.
+- Daylight saving time is handled automatically. An 8am post stays at 8am local time all year.
+- If Scriptura is offline at posting time and comes back **within an hour**, it still posts. If it's later than that, it skips that day rather than posting at an odd time.
+- If the channel is deleted, the schedule is removed automatically. Set it up again with a new channel.
+- If Scriptura loses permission to post in the channel, it skips posts until the permission is restored.
+- There's one daily channel per server.
+
+## Permissions
+
+Scriptura needs **View Channel**, **Send Messages** and **Embed Links** in the chosen channel. If something's missing, `/daily-channel set` tells you with an **I can’t post in that channel** message.
+
+## Errors
+
+These are shown only to you.
+
+| Headline | Why |
+| --- | --- |
+| **Couldn’t read that time** | The time wasn't in a format Scriptura understands |
+| **Unknown time zone** | The time zone wasn't recognized. Pick one from the autocomplete list |
+| **I can’t post in that channel** | Scriptura needs View Channel, Send Messages and Embed Links there |
+| **Unsupported translation** | The translation isn't one of the six supported |
+| **Couldn’t save the schedule** / **Couldn’t load the schedule** / **Couldn’t update the schedule** | A temporary problem saving or loading settings. Try again |
+| **This only works in servers** | You ran it outside a server |
+
+<Aside type="tip">
+Something not working? See [the daily post questions in the FAQ](/faq/#daily-verse-posts).
+</Aside>

@@ -15,7 +15,7 @@ You must be at least **13 years old**, and old enough to use Discord where you l
 
 ## 2. The Service
 
-Scriptura lets you look up and search Bible scripture, read a daily verse, and save display preferences within Discord, using slash commands. The Service is intended for informational and devotional use.
+Scriptura lets you look up and search Bible scripture, read a daily verse, listen to the ESV audio Bible in voice channels, have the daily verse posted automatically in a server channel, and save display preferences within Discord, using slash commands. The Service is intended for informational and devotional use.
 
 ### 2.1 Cost
 
@@ -49,7 +49,7 @@ We may, at our discretion and without notice:
 
 We are not required to give a reason, though we may do so when appropriate.
 
-You can stop using Scriptura at any time by removing it from your server or from your apps in Discord. To have your saved preferences deleted, see the [Privacy Policy](/privacy/#removing-your-data).
+You can stop using Scriptura at any time by removing it from your server or from your apps in Discord. Server admins can remove their server's daily-post schedule with `/daily-channel disable`. To have your saved preferences deleted, see the [Privacy Policy](/privacy/#removing-your-data).
 
 ## 6. Third-party services and content
 
@@ -62,6 +62,7 @@ Scriptura runs on Discord, and your use of Discord is governed by Discord's own 
 Scriptura retrieves scripture text from third-party providers:
 
 - **ESV** text comes from the [ESV API](https://api.esv.org) by Crossway. ESV® Bible (The Holy Bible, English Standard Version®), © Crossway.
+- **ESV audio** is provided through the ESV API and streamed from Crossway. ESV® audio, © Crossway.
 - **All other translations** are provided through [Bible Brain by Faith Comes By Hearing](https://www.faithcomesbyhearing.com/bible-brain).
 
 Scripture text is subject to the rights and terms of its publishers, licensors and providers. You agree to use scripture displayed by Scriptura in accordance with those terms.

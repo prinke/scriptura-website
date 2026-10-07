@@ -1,0 +1,56 @@
+---
+/**
+ * A mock of the /preferences settings panel (a Components V2 container),
+ * shown with its default settings and one change confirmed at the bottom.
+ */
+import DiscordMessage from './DiscordMessage.astro';
+import DiscordButton from './DiscordButton.astro';
+
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const rows = [
+	{ name: 'Footnotes', hint: 'Show footnotes and study notes below the passage', value: 'On', style: 'success' },
+	{ name: 'Verse numbers', hint: 'Show a number before each verse', value: 'On', style: 'success' },
+	{ name: 'Section headings', hint: 'Auto shows headings where the translation provides them', value: 'Auto', style: 'primary' },
+	{ name: 'Line by line', hint: 'Put each verse on its own line · Auto uses this for Psalms', value: 'Auto', style: 'primary' },
+] as const;
+---
+
+<DiscordMessage command="/preferences" ephemeral class={className}>
+	<div class="mt-1.5 max-w-[520px] space-y-3 rounded-lg border-l-4 border-forest-600 bg-dc-embed p-4 text-sm">
+		<div>
+			<p class="text-base font-semibold text-white">⚙️ Preferences</p>
+			<p class="mt-0.5 text-dc-text">Choose how Scriptura shows Bible verses. Changes save instantly.</p>
+		</div>
+		<hr class="border-white/10" />
+		<div>
+			<p class="font-semibold text-white">Translation</p>
+			<p class="text-dc-muted">Used by /verse unless you pick one. Currently English Standard Version.</p>
+			<div class="mt-2 flex h-10 items-center justify-between rounded bg-dc-field px-3 text-dc-text ring-1 ring-black/40">
+				<span>ESV — English Standard Version</span>
+				<svg viewBox="0 0 24 24" class="size-4 text-dc-muted" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+			</div>
+		</div>
+		<hr class="border-white/10" />
+		<div class="space-y-3">
+			{
+				rows.map((row) => (
+					<div class="flex items-center justify-between gap-4">
+						<div class="min-w-0">
+							<p class="font-semibold text-white">{row.name}</p>
+							<p class="text-dc-muted">{row.hint}</p>
+						</div>
+						<DiscordButton style={row.style} class="shrink-0">{row.value}</DiscordButton>
+					</div>
+				))
+			}
+		</div>
+		<hr class="border-white/10" />
+		<DiscordButton style="danger">Reset display settings</DiscordButton>
+		<p class="text-xs text-dc-muted">✓ Footnotes set to on.</p>
+	</div>
+</DiscordMessage>

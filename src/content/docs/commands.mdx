@@ -5,17 +5,21 @@ description: Every Scriptura slash command, with options and examples.
 
 import { Aside } from '@astrojs/starlight/components';
 import DiscordMessage from '../../components/DiscordMessage.astro';
+import DiscordButton from '../../components/DiscordButton.astro';
 
-Scriptura has three commands: `/verse`, `/preferences` and `/ping`.
+Scriptura has five commands: `/verse`, `/audio`, `/daily-channel`, `/preferences` and `/ping`.
 
-| Command | What it does | Who sees the reply |
-| --- | --- | --- |
-| [`/verse search query:<text> [translation]`](#verse-search) | Get a passage or search for a phrase | Everyone in the channel |
-| [`/verse daily`](#verse-daily) | Today's daily verse | Everyone in the channel |
-| [`/preferences set [options…]`](/preferences/#preferences-set) | Save your translation and display settings | Only you |
-| [`/preferences view`](/preferences/#preferences-view) | See your current settings | Only you |
-| [`/preferences reset`](/preferences/#preferences-reset) | Reset display settings to defaults | Only you |
-| [`/ping`](#ping) | Check the bot's response time | Only you |
+| Command | What it does | Who sees the reply | Where |
+| --- | --- | --- | --- |
+| [`/verse search query:<text> [translation]`](#verse-search) | Get a passage or search for a phrase | Everyone in the channel | Anywhere |
+| [`/verse daily`](#verse-daily) | Today's daily verse | Everyone in the channel | Anywhere |
+| [`/audio play passage:<reference>`](/audio/#audio-play) | Play the ESV audio Bible in your voice channel | Everyone in the channel | Servers |
+| [`/audio stop`](/audio/#audio-stop) | Stop playback and leave the voice channel | Only you | Servers |
+| [`/daily-channel set channel:<channel> time:<time> [timezone] [translation]`](/daily-channel/#daily-channel-set) | Post the daily verse in a channel every day | Only you | Servers (admins) |
+| [`/daily-channel view`](/daily-channel/#daily-channel-view) | Show the daily post schedule | Only you | Servers (admins) |
+| [`/daily-channel disable`](/daily-channel/#daily-channel-disable) | Stop the daily posts | Only you | Servers (admins) |
+| [`/preferences`](#preferences) | Open your settings panel | Only you | Anywhere |
+| [`/ping`](#ping) | Check the bot's response time | Only you | Anywhere |
 
 Error messages are always visible only to you.
 
@@ -42,44 +46,53 @@ If your query looks like a reference, you get that passage. If it doesn't, Scrip
 ### Which translation is used
 
 1. The `translation` you picked in the command, if any.
-2. Otherwise, your saved translation from [`/preferences set translation:`](/preferences/).
+2. Otherwise, your saved translation from [`/preferences`](/preferences/).
 3. Otherwise, **ESV**.
 
 ### Passage results
 
-<DiscordMessage command="/verse search" embedTitle="Psalm 46:1 (ESV)" embedHref="https://www.biblegateway.com/passage/?search=Psalm+46%3A1&version=ESV">
+<DiscordMessage command="/verse search" embedTitle="Psalm 46:1" embedHref="https://www.biblegateway.com/passage/?search=Psalm+46%3A1&version=ESV" footer="English Standard Version (ESV)">
   <sup class="text-dc-muted">1</sup> God is our refuge and strength, a very present help in trouble.
 </DiscordMessage>
 
-- The title shows the reference and translation. Click it to open the passage on BibleGateway in the same translation.
+- The **title** is the reference. Click it to open the passage on BibleGateway in the same translation.
+- Verse numbers are shown as small superscript numbers. You can turn them off in [`/preferences`](/preferences/).
+- With [footnotes](/preferences/) turned on (ESV only), the notes appear in their own **Footnotes** section below the passage. Their markers in the text are superscript numbers (¹, ²) that match the notes.
+- The **footer** shows the translation's full name and code.
 - Very long passages, such as some full chapters, are cut off at Discord's 4,096-character limit. Ask for a smaller range if that happens.
 
 ### Search results
 
-<DiscordMessage command="/verse search" embedTitle='Search results: "love is patient"'>
-  <p class="text-dc-muted">Translation: ESV</p>
-  <p class="mt-2 font-semibold text-white">1 Corinthians 13:4</p>
+<DiscordMessage command="/verse search" embedTitle="Search: “love is patient”" footer="English Standard Version · 47 results · Page 1 of 5">
+  <p><a href="https://www.biblegateway.com/passage/?search=1+Corinthians+13%3A4&version=ESV" target="_blank" rel="noopener" class="font-semibold text-dc-link no-underline hover:underline">1 Corinthians 13:4</a></p>
   <p>Love is patient and kind; love does not envy or boast; it is not arrogant</p>
+  <p class="mt-2"><a href="https://www.biblegateway.com/passage/?search=Ephesians+4%3A2&version=ESV" target="_blank" rel="noopener" class="font-semibold text-dc-link no-underline hover:underline">Ephesians 4:2</a></p>
+  <p>with all humility and gentleness, with patience, bearing with one another in love,</p>
+  <div slot="after" class="mt-2 flex gap-2">
+    <DiscordButton>◀️</DiscordButton>
+    <DiscordButton disabled>1 / 5</DiscordButton>
+    <DiscordButton>▶️</DiscordButton>
+  </div>
 </DiscordMessage>
 
-- Each page shows up to **10 matching verses** with their references.
-- When there are more, **Previous** and **Next** buttons appear, and the footer reads like `Page 1/5 · Showing 1-10 of 47 results`.
+- Each page shows up to **10 matching verses**. Each reference links to BibleGateway, and long verses are shortened.
+- The footer shows the translation, the total number of results and the current page.
+- When there's more than one page, **◀️ `1 / 5` ▶️** buttons appear. The middle button just shows the current page.
 - Only the person who ran the search can use the buttons. They stop working after **2 minutes**. Run the search again to keep browsing.
 
 ### Errors
 
-If something goes wrong, Scriptura replies with a message only you can see. Your query and translation are shown underneath in small text.
+If something goes wrong, Scriptura replies with a small red message only you can see. It has a short headline, sometimes a tip, and your query and translation in the footer.
 
-<DiscordMessage command="/verse search" ephemeral>
-  <p>No results found.</p>
-  <p class="text-xs text-dc-muted">Query: Hezekiah 3:1 • Translation: ESV</p>
+<DiscordMessage command="/verse search" embedTitle="No results found" footer="“Hezekiah 3:1” · ESV" variant="error" ephemeral>
+  Try a reference like “John 3:16” or a different phrase.
 </DiscordMessage>
 
-| Message | What it means |
-| --- | --- |
-| `No results found.` | The reference doesn't exist in that translation, or the phrase had no matches. |
-| `There was an error while executing this command!` | The scripture service didn't respond. Try again shortly. |
-| `Verse found, but could not parse passage content.` | Try a different translation. |
+| Headline | When it appears | Tip shown |
+| --- | --- | --- |
+| **No results found** | The reference doesn't exist in that translation, or the phrase had no matches | "Try a reference like “John 3:16” or a different phrase." |
+| **Something went wrong** | The scripture service didn't respond | "Couldn’t reach the ESV API / Bible Brain. Please try again in a moment." |
+| **Couldn’t read that passage** | The verse was found but its text couldn't be read | "Try a different translation." |
 
 ## `/verse daily`
 
@@ -87,19 +100,40 @@ If something goes wrong, Scriptura replies with a message only you can see. Your
 /verse daily
 ```
 
-Shows today's daily verse. It has no options. The verse is shown in your saved translation (ESV if you haven't set one) with your display settings, and it looks just like a normal passage. Learn more on the [Daily verse](/daily-verse/) page.
+Shows today's daily verse. It has no options. The verse is shown in your saved translation (ESV if you haven't set one) with your display settings. It looks like a normal passage, with a **☀️ Verse of the Day** label above the reference.
+
+Server admins can also have the daily verse posted automatically with [`/daily-channel`](/daily-channel/). Learn more on the [Daily verse](/daily-verse/) page.
+
+## `/audio`
+
+Listen to the ESV audio Bible in a voice channel. Join a voice channel, then run:
+
+```
+/audio play passage:Psalm 23
+/audio stop
+```
+
+`/audio` only works in servers where Scriptura has been added. See [Audio Bible](/audio/) for the details.
+
+## `/daily-channel`
+
+For server admins: have Scriptura post the daily verse in a channel every day, at a time you choose.
+
+```
+/daily-channel set channel:#daily-verse time:8am timezone:America/New_York
+/daily-channel view
+/daily-channel disable
+```
+
+See [Daily verse posts](/daily-channel/) for every option.
 
 ## `/preferences`
 
-Save your favorite translation and how verses are displayed. These settings follow you to every server and DM, and the replies are only visible to you.
-
 ```
-/preferences set translation:NKJV verse_numbers:True
-/preferences view
-/preferences reset
+/preferences
 ```
 
-See [Preferences](/preferences/) for every option.
+Opens a settings panel, visible only to you, where you can pick your translation and choose how verses are displayed. Changes save instantly and follow you to every server and DM. See [Preferences](/preferences/).
 
 ## `/ping`
 
@@ -107,7 +141,17 @@ See [Preferences](/preferences/) for every option.
 /ping
 ```
 
-Replies with `Pong!` and the bot's current latency in milliseconds. Use it to check that Scriptura is online and responding.
+<DiscordMessage command="/ping" embedTitle="🏓 Pong!" ephemeral>
+  <p><span class="font-semibold text-white">Round trip:</span> 142 ms</p>
+  <p><span class="font-semibold text-white">Heartbeat:</span> 38 ms</p>
+</DiscordMessage>
+
+Replies, only to you, with two numbers:
+
+- **Round trip:** how long Scriptura took to respond to your command, in milliseconds.
+- **Heartbeat:** Scriptura's connection latency to Discord, in milliseconds.
+
+Use it to check that Scriptura is online and responding.
 
 <Aside type="tip">
 Commands don't show up? See [the FAQ](/faq/#the-commands-dont-show-up).

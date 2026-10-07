@@ -69,6 +69,10 @@ export default defineConfig({
 					items: ['commands', 'preferences', 'translations', 'references', 'daily-verse'],
 				},
 				{
+					label: 'In your server',
+					items: ['audio', 'daily-channel'],
+				},
+				{
 					label: 'Help',
 					items: ['faq', 'privacy', 'terms'],
 				},
