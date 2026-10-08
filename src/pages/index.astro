@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import DiscordMessage from '../components/DiscordMessage.astro';
 import DiscordButton from '../components/DiscordButton.astro';
 import PreferencesPanel from '../components/PreferencesPanel.astro';
-import { GITHUB_URL as GITHUB, INVITE_URL as INVITE } from '../consts';
+import { GITHUB_URL as GITHUB, INVITE_URL as INVITE, STATUS_URL as STATUS, DONATE_URL as DONATE } from '../consts';
 
 const nav = [
 	{ label: 'Getting started', href: '/getting-started' },
@@ -371,6 +371,8 @@ const translations = ['ESV', 'NKJV', 'KJV', 'NASB', 'NLT', 'ASV'];
 					<a href="/audio" class="hover:text-ink dark:hover:text-white">Audio Bible</a>
 					<a href="/daily-channel" class="hover:text-ink dark:hover:text-white">Daily posts</a>
 					<a href="/faq" class="hover:text-ink dark:hover:text-white">FAQ</a>
+					<a href={STATUS} target="_blank" rel="noopener" class="hover:text-ink dark:hover:text-white">Status</a>
+					<a href={DONATE} target="_blank" rel="noopener" class="hover:text-ink dark:hover:text-white">Donate</a>
 					<a href="/privacy" class="hover:text-ink dark:hover:text-white">Privacy</a>
 					<a href="/terms" class="hover:text-ink dark:hover:text-white">Terms</a>
 					<a href={GITHUB} target="_blank" rel="noopener" class="hover:text-ink dark:hover:text-white">GitHub</a>

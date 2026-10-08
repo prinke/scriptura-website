@@ -5,6 +5,10 @@ description: Answers to common questions and fixes for common problems.
 
 ## Troubleshooting
 
+### Scriptura isn't responding
+
+Check the [status page](https://status.prinke.dev/status/scriptura) to see if Scriptura is down or having issues. If everything looks fine there, try the steps below.
+
 ### The commands don't show up
 
 Make sure Scriptura is added to the server, or to your account through **Add to My Apps** (see [Getting started](/getting-started/)). Some servers disable user apps or restrict bot commands to certain channels.
